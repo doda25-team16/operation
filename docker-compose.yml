@@ -1,0 +1,28 @@
+services:
+  # Model service
+  sms-model:
+    image: sms-model 
+    container_name: sms-model
+    
+    # Set the dynamic port
+    environment:
+      - MODEL_PORT=${MODEL_PORT:-8081}    
+    ports:
+      - "${MODEL_PORT:-8081}:${MODEL_PORT:-8081}"
+      
+    working_dir: /root 
+    restart: always
+
+  # App service
+  sms-app:
+    image: sms-app
+    container_name: sms-app
+      
+    # Set the dynamic port and the URL
+    environment:
+      - SERVER_PORT=${SERVER_PORT:-8080}
+      - MODEL_HOST=http://sms-model:${MODEL_PORT:-8081}
+    ports:
+      - "${SERVER_PORT:-8080}:${SERVER_PORT:-8080}"
+      
+    restart: always
