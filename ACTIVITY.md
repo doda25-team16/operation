@@ -17,5 +17,5 @@ I have worked on integrating F8: Automated Container Release (both model-service
   - For F10, I directly modified serve_model.py and implemented the logic of checking for the validity of a provided volume mount and model file in which the model will use. In any case, it will either use the provided model or it will download a given model from our release. Should not throw any errors.
   - Also reviewed 2 pull requests (F5.2 & F6)
 
-- Uddhav: https://github.com/doda25-team16/app/pull/4
+- Uddhav: https://github.com/doda25-team16/model-service/pull/4
 I worked on F9, where I automated the training and release pipeline. I created a workflow to train the model, packaged the artifact and used GitHub CLI 'gh' to create releases. I had to debug permission issues with 'GH_TOKEN'
