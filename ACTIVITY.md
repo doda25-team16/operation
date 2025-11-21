@@ -19,3 +19,6 @@ I have worked on integrating F8: Automated Container Release (both model-service
 
 - Uddhav: https://github.com/doda25-team16/model-service/pull/4
 I worked on F9, where I automated the training and release pipeline. I created a workflow to train the model, packaged the artifact and used GitHub CLI 'gh' to create releases. I had to debug permission issues with 'GH_TOKEN'
+
+- Job: https://github.com/doda25-team16/lib-version/commits/feature/version-aware-library/
+Worked on integrating F1 and F2 for the version-aware library. Features include automatically package and version the library and release it to the package registry. Workflow is also compatible with snapshots.
