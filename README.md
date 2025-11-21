@@ -8,7 +8,7 @@ This repository contains the necessary configuration files and documentation for
 
 1. Docker & Docker Compose: Must be installed and running on the host machine.
 
-2. Built Images: The following application images must be built and available in the local Docker registry:
+2. Built Images: The following application images must be built:
 
     - `sms-app` (from the `app` repository)
 
@@ -65,3 +65,6 @@ To stop and remove the running containers:
 docker compose down
 ```
 
+# Attribution
+
+This documentation was created with the assistance of generative AI. We provided all ideas, structural sections, and specific technical requirements, while the AI was used for refining the language.
