@@ -1,9 +1,9 @@
 Peer Review Submission Team 16
 
-* operation: https://github.com/doda25-team16/operation
-* backend: https://github.com/doda25-team16/model-service
-* frontend: https://github.com/doda25-team16/app
-* lib: https://github.com/doda25-team16/lib-version
+* operation: https://github.com/doda25-team16/operation/tree/a1
+* backend: https://github.com/doda25-team16/model-service/tree/a1
+* frontend: https://github.com/doda25-team16/app/tree/a1
+* lib: https://github.com/doda25-team16/lib-version/tree/a1
 
 ## Comments for A1:
 - We did not integrate F4: Multi-Architecture Containers to work with F8: Automated container image releases
@@ -12,7 +12,7 @@ Peer Review Submission Team 16
 The following can be validated in their respective repositories:
 - `lib`: F1 & F2
 - `backend` and `frontend`: F3
-- To validate F5 of multi-staging, you can build the docker file in https://github.com/doda25-team16/model-service/tree/v0.0.1 (pre-multi-staging) and then build our latest Dockerfile in [INSERT TAG HERE BEFORE SUBMITTING] and then compare image SIZES with `docker images`
+- To validate F5 of multi-staging, you can build the docker file in [v0.01](https://github.com/doda25-team16/model-service/tree/v0.0.1) (pre-multi-staging) and then build our latest Dockerfile in [backend a1](https://github.com/doda25-team16/operation/tree/a1) and then compare image SIZES with `docker images`
 - For F6 and F7 (Docker Compose + Flexible Port Configuration), you can learn more in the [README.md](https://github.com/doda25-team16/operation)
 - F8 and F9 are just automated releases, they can be found in https://github.com/orgs/doda25-team16/packages and https://github.com/doda25-team16/model-service/releases
 - F10 contains instructions for running models and mounts in the [README.md](https://github.com/doda25-team16/model-service/blob/main/README.md)
