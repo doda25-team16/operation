@@ -2,6 +2,13 @@
 NUMBER_OF_WORKERS = 2
 
 Vagrant.configure("2") do |config|
+  hosts_list = []
+
+  hosts_list << {"VM_name" => "ctrl", "ip" => "192.168.56.100"}
+  (1..NUMBER_OF_WORKERS).each do |i|
+    hosts_list << {"VM_name" => "node-#{i}", "ip" => "192.168.56.10#{i}"}
+  end
+
   # Default Nodes
   config.vm.box = "bento/ubuntu-24.04"
   config.vm.provider "virtualbox" do |vb|
@@ -23,6 +30,7 @@ Vagrant.configure("2") do |config|
     ctrl.vm.provision :ansible do |ctrl_ansible|
       ctrl_ansible.compatibility_mode = "2.0"
       ctrl_ansible.playbook = "ansible/general.yaml"
+      ctrl_ansible.extra_vars = { hosts_list: hosts_list }
     end
 
     # # Control Node specific playbook
@@ -47,6 +55,7 @@ Vagrant.configure("2") do |config|
       node.vm.provision :ansible do |node_ansible|
         node_ansible.compatibility_mode = "2.0"
         node_ansible.playbook = "ansible/general.yaml"
+        node_ansible.extra_vars = { hosts_list: hosts_list }
       end
 
       # Worker Node specific playbook

@@ -57,3 +57,8 @@
         name: net.bridge.bridge-nf-call-ip6tables
         value: '1'
         sysctl_set: true
+
+    - name: Manage /etc/hosts (#8)
+      ansible.builtin.template:
+        src: templates/hosts.j2
+        dest: /etc/hosts
