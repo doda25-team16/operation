@@ -22,3 +22,8 @@ I worked on F9, where I automated the training and release pipeline. I created a
 
 - Job: https://github.com/doda25-team16/lib-version/commits/feature/version-aware-library/
 Worked on integrating F1 and F2 for the version-aware library. Features include automatically package and version the library and release it to the package registry. Workflow is also compatible with snapshots.
+
+### Week Q2.3 (Nov 24+)
+
+- Caio: https://github.com/doda25-team16/model-service/pull/10
+Worked on steps 8, 9 10 and 11 of A2. These envolved ensuring all nodes are reachable by name, adding the kubernetes repository, installing k8s tools and configuring containerd.
