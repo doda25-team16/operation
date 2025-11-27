@@ -57,3 +57,75 @@
         name: net.bridge.bridge-nf-call-ip6tables
         value: '1'
         sysctl_set: true
+
+    - name: Manage /etc/hosts (#8)
+      ansible.builtin.template:
+        src: templates/hosts.j2
+        dest: /etc/hosts
+
+    - name: Get Kubernetes key and dearmor it (#9)
+      ansible.builtin.shell: |
+        curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.32/deb/Release.key \
+        | gpg --dearmor -o /etc/apt/keyrings/kubernetes.gpg
+      args:
+        creates: /etc/apt/keyrings/kubernetes.gpg
+
+    - name: Add Kubernetes repo (#9)
+      apt_repository:
+        repo: deb [signed-by=/etc/apt/keyrings/kubernetes.gpg] https://pkgs.k8s.io/core:/stable:/v1.32/deb/ /
+        state: present
+        filename: kubernetes
+
+    - name: Update apt cache (#9)
+      ansible.builtin.apt:
+        update_cache: yes
+
+    - name: Install kubernetes packages (#10)
+      ansible.builtin.apt:
+        pkg:
+          - kubeadm=1.32.4-1.1
+          - kubelet=1.32.4-1.1
+          - kubectl=1.32.4-1.1
+        state: present
+        update_cache: yes
+
+    - name: Install container runtime packages (#10)
+      ansible.builtin.apt:
+        pkg:
+          - containerd #Was not able to pull exact version but lecturer said using the one available is ok
+          - runc #Was not able to pull exact version but lecturer said using the one available is ok
+        state: present
+        update_cache: yes
+
+    - name: Create /etc/containerd (#11)
+      ansible.builtin.file:
+        path: /etc/containerd
+        state: directory
+
+    - name: Get default containerd config (#11)
+      ansible.builtin.shell: containerd config default > /etc/containerd/config.toml
+      args:
+        creates: /etc/containerd/config.toml
+
+    - name: Disable AppArmor (#11)
+      ansible.builtin.lineinfile:
+        path: /etc/containerd/config.toml
+        regexp: '^\s*disable_apparmor\s*='
+        line: '    disable_apparmor = true'
+
+    - name: Set sandbox image (#11)
+      ansible.builtin.lineinfile:
+        path: /etc/containerd/config.toml
+        regexp: '^\s*sandbox_image\s*='
+        line: '    sandbox_image = "registry.k8s.io/pause:3.10"'
+
+    - name: Set SystemdCgroup to true (#11)
+      ansible.builtin.lineinfile:
+        path: /etc/containerd/config.toml
+        regexp: '^\s*SystemdCgroup\s*='
+        line: '           SystemdCgroup = true'
+
+    - name: Restart service containerd (#11)
+      ansible.builtin.service:
+        name: containerd
+        state: restarted
