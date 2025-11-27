@@ -92,8 +92,8 @@
     - name: Install container runtime packages (#10)
       ansible.builtin.apt:
         pkg:
-          - containerd
-          - runc
+          - containerd #Was not able to pull exact version but lecturer said using the one available is ok
+          - runc #Was not able to pull exact version but lecturer said using the one available is ok
         state: present
         update_cache: yes
 
