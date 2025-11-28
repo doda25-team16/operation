@@ -40,18 +40,35 @@
       when: kubeconfig_after.stat.exists
 
 # Step 16: Install Helm
-    - name: Add Helm GPG key
-      apt_key:
-        url: https://baltocdn.com/helm/signing.asc
+
+    - name: Install required packages for Helm
+      apt:
+        name:
+          - curl
+          - gpg
+          - apt-transport-https
         state: present
+        update_cache: yes
+
+    - name: Download Helm GPG key and dearmor it
+      shell: |
+        curl -fsSL https://packages.buildkite.com/helm-linux/helm-debian/gpgkey \
+        | gpg --dearmor \
+        | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
+      args:
+        executable: /bin/bash
 
     - name: Add Helm APT repository
-      apt_repository:
-        repo: "deb https://baltocdn.com/helm/stable/debian/ all main"
-        state: present
+      copy:
+        dest: /etc/apt/sources.list.d/helm-stable-debian.list
+        content: |
+          deb [signed-by=/usr/share/keyrings/helm.gpg] https://packages.buildkite.com/helm-linux/helm-debian/any/ any main
+
+    - name: Update apt 
+      apt:
+        update_cache: yes
 
     - name: Install Helm
       apt:
         name: helm
         state: present
-        update_cache: yes
