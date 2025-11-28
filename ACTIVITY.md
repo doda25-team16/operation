@@ -33,3 +33,6 @@ Worked on steps 8, 9 10 and 11 of A2. These envolved ensuring all nodes are reac
 
 - Yuting: https://github.com/doda25-team16/model-service/pull/15
   I have worked on A2 step 14: setup and connect kubectl to control the configured workloads. I am still working on A2 step 15 and 16, which will be done in the next week.
+
+- Ignas: https://github.com/doda25-team16/model-service/pull/11/files
+  This week I had less contribution in pure code, as it depended on previous steps. I have made a start for steps 20 and up, and helped with other features. Next week I will finish these when preceding        steps are working.
