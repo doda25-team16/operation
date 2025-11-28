@@ -21,7 +21,7 @@ This repository contains the necessary configuration files and documentation for
     docker build -t sms-model .
     ```
 
-## Running the Application Cluster
+## Running the Application Cluster with Docker for assignment 1
 
 The application is started using `docker compose`. It defaults to using port `8080` for the app frontend and `8081` for the model service, as defined in the configuration.
 
@@ -58,12 +58,21 @@ SERVER_PORT=9000 MODEL_PORT=8090 docker compose up -d
 
 (After running the example, access the app at http://localhost:9000/sms)
 
-## Stopping the Cluster
+### Stopping the Cluster
 
 To stop and remove the running containers:
 ```
 docker compose down
 ```
+
+## Running the Application Cluster for assignment 2
+
+The cluster can be started by:
+1. `cd path/to/model-service`
+2. run `vagrant up`
+
+This starts the cluster using the Vagrantfile, and runs the `general.yaml`, `ctrl.yaml` and `node.yaml` files
+
 
 # Attribution
 
