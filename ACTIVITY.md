@@ -39,3 +39,11 @@ Worked on steps 8, 9 10 and 11 of A2. These envolved ensuring all nodes are reac
 
 - Uddhav: https://github.com/doda25-team16/model-service/pull/12
   This week I worked on steps 12 and 13 for A2, which involved enabling kubelet and controller initialization. I was also assigned steps 18 and 19, which I will get to in the coming days once step 17 is complete.
+
+
+- Job: https://github.com/doda25-team16/lib-version/pull/2  
+       Implemented automated versioning and release management for the lib-version library. Added support for stable releases, prereleases, and version metadata packaging to ensure the library can         be published reliably and consumed across multiple environments.
+
+  https://github.com/doda25-team16/model-service/tree/step22-kubernetes-dashboard 
+      Integrated the Kubernetes Dashboard into the provisioning workflow. Added automated Helm installation, deployed the Dashboard via its Helm charm. could not do the other steps at the moment due to previous parts not being finished.
+
