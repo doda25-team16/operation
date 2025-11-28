@@ -30,3 +30,6 @@ Worked on integrating F1 and F2 for the version-aware library. Features include 
 
 - Caio: https://github.com/doda25-team16/model-service/pull/10
 Worked on steps 8, 9 10 and 11 of A2. These envolved ensuring all nodes are reachable by name, adding the kubernetes repository, installing k8s tools and configuring containerd.
+
+- Yuting: https://github.com/doda25-team16/model-service/pull/15
+  I have worked on A2 step 14: setup and connect kubectl to control the configured workloads. I am still working on A2 step 15 and 16, which will be done in the next week.
