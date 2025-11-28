@@ -37,6 +37,9 @@ Worked on steps 8, 9 10 and 11 of A2. These envolved ensuring all nodes are reac
 - Ignas: https://github.com/doda25-team16/model-service/pull/11/files
   This week I had less contribution in pure code, as it depended on previous steps. I have made a start for steps 20 and up, and helped with other features. When the previous steps are running, I will finish the remaining TODOs in the code, as now it cant be properly tested.
 
+- Johnny: https://github.com/doda25-team16/model-service/pull/9
+  This week, I worked on the initial set up from #1 - #7, which involved setting the basic Vagrant and Ansible provisioning stuff. Instantiated the preliminaries for Vagrantfiles, ctrl, general and node files for the rest of the team to work on.
+
 - Uddhav: https://github.com/doda25-team16/model-service/pull/12
   This week I worked on steps 12 and 13 for A2, which involved enabling kubelet and controller initialization. I was also assigned steps 18 and 19, which I will get to in the coming days once step 17 is complete.
 
