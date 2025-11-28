@@ -16,3 +16,8 @@ The following can be validated in their respective repositories:
 - For F6 and F7 (Docker Compose + Flexible Port Configuration), you can learn more in the [README.md](https://github.com/doda25-team16/operation)
 - F8 and F9 are just automated releases, they can be found in https://github.com/orgs/doda25-team16/packages and https://github.com/doda25-team16/model-service/releases
 - F10 contains instructions for running models and mounts in the [README.md](https://github.com/doda25-team16/model-service/blob/main/README.md)
+
+## Comments for A2:
+- We did not fully implement steps 15-23.
+- Steps 1 through 14 are merged in the respective repositories.
+- Beware: we have put our VM/cluster config files in the `model-service` repository. We plan to migrate it to the `operation` repo.
