@@ -1,9 +1,9 @@
 Peer Review Submission Team 16
 
-* operation: https://github.com/doda25-team16/operation/tree/a1
-* backend: https://github.com/doda25-team16/model-service/tree/a1
-* frontend: https://github.com/doda25-team16/app/tree/a1
-* lib: https://github.com/doda25-team16/lib-version/tree/a1
+* operation: https://github.com/doda25-team16/operation/tree/a1 TODO UPDATE
+* backend: https://github.com/doda25-team16/model-service/tree/a1 TODO UPDATE
+* frontend: https://github.com/doda25-team16/app/tree/a1 TODO UPDATE
+* lib: https://github.com/doda25-team16/lib-version/tree/a1 TODO UPDATE
 
 ## Comments for A1:
 - We did not integrate F4: Multi-Architecture Containers to work with F8: Automated container image releases
@@ -21,3 +21,4 @@ The following can be validated in their respective repositories:
 - We did not fully implement steps 15-23.
 - Steps 1 through 14 are merged in the respective repositories.
 - Beware: we have put our VM/cluster config files in the `model-service` repository. We plan to migrate it to the `operation` repo.
+- Specific run instructions can be found in the `README.md` in the `operations` repo.
