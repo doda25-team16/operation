@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sms-app-config
+data:
+  MODEL_SERVICE_URL: "http://sms-model:8081"
+  SERVER_PORT: "8080"

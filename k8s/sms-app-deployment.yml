@@ -21,6 +21,20 @@ spec:
           - containerPort: 8080
         env:
           - name: SERVER_PORT
-            value: "8080"
-          - name: MODEL_HOST
-            value: "http://sms-model:8081"
+            valueFrom:
+              configMapKeyRef:
+                name: sms-app-config
+                key: SERVER_PORT
+
+          - name: MODEL_SERVICE_URL
+            valueFrom:
+              configMapKeyRef:
+                name: sms-app-config
+                key: MODEL_SERVICE_URL
+          
+          - name: SECRET
+            valueFrom:
+              secretKeyRef:
+                name: sms-app-secret
+                key: MY_SECRET
+          
