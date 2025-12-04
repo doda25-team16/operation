@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sms-app-ingress
+spec:
+  rules:
+  - host: team16-sms.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: sms-app
+            port:
+              number: 8080
