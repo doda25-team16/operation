@@ -68,8 +68,9 @@ docker compose down
 ## Running the Application Cluster for assignment 2
 
 The cluster can be started by:
-1. `cd path/to/model-service`
+1. `cd path/to/operation`
 2. run `vagrant up`
+3. This will run the Vagrantfile, and all the playbooks which can be found in the /ansible folder. `Except ansible/finalization.yaml`, this one has to be run manually.
 
 This starts the cluster using the Vagrantfile, and runs the `general.yaml`, `ctrl.yaml` and `node.yaml` files
 
