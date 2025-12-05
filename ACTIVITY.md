@@ -55,5 +55,5 @@ Worked on steps 8, 9 10 and 11 of A2. These envolved ensuring all nodes are reac
 - Caio: https://github.com/doda25-team16/app/pull/8 I worked on the monitoring setup for assignment 3. Thus, I added a /metrics to our frontend which collected different information in the form of a histogram, gauge and counter.
 
 - Ignas: I worked on implementing the last steps of A2, which was not possible earlier due to missing earlier steps and node configurations.
-  Implemented MetalLB, Ingress, IPconfigs, L2advertisements and improved other configurations (https://github.com/doda25-team16/model-service/pull/21). I also moved everything from `model-service` to `operation` which had to do with our infra provisioning (https://github.com/doda25-team16/operation/pull/49).
+  Implemented MetalLB, Ingress, IPconfigs, L2advertisements and improved other configurations (https://github.com/doda25-team16/model-service/pull/21). I also moved everything from `model-service` to `operation` which had to do with our infra provisioning (https://github.com/doda25-team16/operation/pull/49). And I made a start for Alerting in A3 (https://github.com/doda25-team16/operation/pull/50)
 
