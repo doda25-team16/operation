@@ -57,3 +57,6 @@ Worked on steps 8, 9 10 and 11 of A2. These envolved ensuring all nodes are reac
 - Ignas: I worked on implementing the last steps of A2, which was not possible earlier due to missing earlier steps and node configurations.
   Implemented MetalLB, Ingress, IPconfigs, L2advertisements and improved other configurations (https://github.com/doda25-team16/model-service/pull/21). I also moved everything from `model-service` to `operation` which had to do with our infra provisioning (https://github.com/doda25-team16/operation/pull/49). And I made a start for Alerting in A3 (https://github.com/doda25-team16/operation/pull/50)
 
+- Yuting: https://github.com/doda25-team16/model-service/pull/16
+  I worked on steps 15 - 16 of A2, which installed Flannel and Helm, and added configuration in the ctrl file. After that, I started working on the Grafana part of A3, which will be done in the next week.
+
