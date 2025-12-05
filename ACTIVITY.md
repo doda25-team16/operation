@@ -60,3 +60,6 @@ Worked on steps 8, 9 10 and 11 of A2. These envolved ensuring all nodes are reac
 - Yuting: https://github.com/doda25-team16/model-service/pull/16
   I worked on steps 15 - 16 of A2, which installed Flannel and Helm, and added configuration in the ctrl file. After that, I started working on the Grafana part of A3, which will be done in the next week.
 
+- Johnny: https://github.com/doda25-team16/operation/pull/48
+
+  Had the leftover task from A1 on Automated Multi-Architecture Container release which I did. For A3, I did the migration over from Docker-Compose -> Kubernetes. Implemented the core components such as Services, Deployments and Ingress in separate template files. Additionally, added ConfigMap to App (to customize model URL + ports) and Secrets (not used) to the program.
