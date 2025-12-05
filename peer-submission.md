@@ -30,10 +30,13 @@ The following can be validated in their respective repositories:
 
 ## Assignment 3
 ### Links
-- operation: TODO MAKE TAG
-- backend: TODO MAKE TAG
-- frontend: TODO MAKE TAG
-- lib: TODO MAKE TAG
+- operation: https://github.com/doda25-team16/operation/tree/a3-v1
+- backend: https://github.com/doda25-team16/model-service/tree/a3-v1
+- frontend: https://github.com/doda25-team16/app/tree/a3-v1
+- lib: https://github.com/doda25-team16/lib-version/tree/a3-v1
 
 ### Comments
+- Running info can be found in `operation/README.md`
 - For this assignment, we moved all provisioning code from `model-service` to `operation` repo, where it can be found now.
+- The only part of A3 fully finished is the migration from docker compose to kubernetes.
+- Other steps, so Helm, Monitoring, Alerting and Grafana have some start made, but are not fully functional yet. Because we spent the time finalizing A2 in the mean time.
