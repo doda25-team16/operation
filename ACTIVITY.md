@@ -50,3 +50,8 @@ Worked on steps 8, 9 10 and 11 of A2. These envolved ensuring all nodes are reac
   https://github.com/doda25-team16/model-service/tree/step22-kubernetes-dashboard 
       Integrated the Kubernetes Dashboard into the provisioning workflow. Added automated Helm installation, deployed the Dashboard via its Helm charm. could not do the other steps at the moment due to previous parts not being finished.
 
+### Week Q2.4 (Dec 1+)
+
+- Ignas: I worked on implementing the last steps of A2, which was not possible earlier due to missing earlier steps and node configurations.
+  Implemented MetalLB, Ingress, IPconfigs, L2advertisements and improved other configurations (https://github.com/doda25-team16/model-service/pull/21). I also moved everything from `model-service` to `operation` which had to do with our infra provisioning (https://github.com/doda25-team16/operation/pull/49).
+
