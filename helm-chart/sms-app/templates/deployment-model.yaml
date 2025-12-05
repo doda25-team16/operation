@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.model.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.model.name }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.model.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.model.name }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.model.name }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+      - name: {{ .Values.model.name }}
+        image: "{{ .Values.model.image.repository }}:{{ .Values.model.image.tag }}"
+        imagePullPolicy: {{ .Values.model.image.pullPolicy }}
+        ports:
+          - name: http
+            containerPort: {{ .Values.model.service.targetPort }}
+            protocol: TCP
+        env:
+          - name: MODEL_PORT
+            value: {{ .Values.model.env.modelPort | quote }}
+        {{- if .Values.resources }}
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+        {{- end }}

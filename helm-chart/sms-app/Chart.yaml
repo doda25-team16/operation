@@ -1,0 +1,9 @@
+apiVersion: v2
+name: sms-app
+description: A Helm chart for deploying the SMS spam detection application
+type: application
+version: 0.1.0
+appVersion: "1.0"
+maintainers:
+  - name: Team16
+    email: team16@example.com
