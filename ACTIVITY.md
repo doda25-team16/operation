@@ -63,3 +63,6 @@ Worked on steps 8, 9 10 and 11 of A2. These envolved ensuring all nodes are reac
 - Johnny: https://github.com/doda25-team16/operation/pull/48
 
   Had the leftover task from A1 on Automated Multi-Architecture Container release which I did. For A3, I did the migration over from Docker-Compose -> Kubernetes. Implemented the core components such as Services, Deployments and Ingress in separate template files. Additionally, added ConfigMap to App (to customize model URL + ports) and Secrets (not used) to the program.
+
+- Uddhav: https://github.com/doda25-team16/model-service/pull/19
+  I worked on the leftover tasks from A2, specifically steps 17, 18 and 19. The steps involved generating and running join commands, and the necessary changes have been made to the ctrl and node yaml files
