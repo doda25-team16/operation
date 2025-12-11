@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.app.name }}-config
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.app.name }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+data:
+  MODEL_SERVICE_URL: {{ .Values.app.env.modelServiceUrl | quote }}
+  SERVER_PORT: {{ .Values.app.env.serverPort | quote }}
