@@ -66,3 +66,5 @@ Worked on steps 8, 9 10 and 11 of A2. These envolved ensuring all nodes are reac
 
 - Uddhav: https://github.com/doda25-team16/model-service/pull/19
   I worked on the leftover tasks from A2, specifically steps 17, 18 and 19. The steps involved generating and running join commands, and the necessary changes have been made to the ctrl and node yaml files
+
+- Job: https://github.com/doda25-team16/operation/pull/53 and https://github.com/doda25-team16/operation/pull/52, Made a working helm chart that runs the project and implemented steps 22 and 23 from a2.
