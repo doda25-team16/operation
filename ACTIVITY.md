@@ -72,3 +72,4 @@ Worked on steps 8, 9 10 and 11 of A2. These envolved ensuring all nodes are reac
 ### Week Q2.5 (Dec 8+)
 
 - Caio: https://github.com/doda25-team16/operation/pull/61 I worked on the traffic management section of A4. This involved adding the istio configurations for a canary release. Thus, I applied what was previously seen in class for istio and a canary release to our project with some modifications to make it work for our case. I also gave each version of sms-app and model a different weight (90 and 10).
+- Ignas: Continued working on finishing alerting from A3. Implemented Rate limiting as an additional usecase from A4.
