@@ -15,6 +15,11 @@ Vagrant.configure("2") do |config|
     vb.gui = false
   end
 
+  # Shared folder for A3 Excellent
+  config.vm.synced_folder "/home/uddhav-pisharody/shared", "/mnt/shared", type: "rsync", rsync__auto: true
+
+
+
   # Control Node
   config.vm.define "ctrl" do |ctrl|
     ctrl.vm.hostname = "ctrl"

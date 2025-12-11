@@ -110,7 +110,7 @@
     - name: Disable AppArmor (#11)
       ansible.builtin.lineinfile:
         path: /etc/containerd/config.toml
-        regexp: '^\s*disable_apparmor\s*='
+        regexp: 'disable_apparmor\s*=\s*false'
         line: '    disable_apparmor = true'
 
     - name: Set sandbox image (#11)
@@ -122,8 +122,8 @@
     - name: Set SystemdCgroup to true (#11)
       ansible.builtin.lineinfile:
         path: /etc/containerd/config.toml
-        regexp: '^\s*SystemdCgroup\s*='
-        line: '           SystemdCgroup = true'
+        regexp: 'SystemdCgroup\s*=\s*false'
+        line: 'SystemdCgroup = true'
 
     - name: Restart service containerd (#11)
       ansible.builtin.service:
@@ -135,3 +135,12 @@
         name: kubelet
         state: started
         enabled: yes
+
+    - name: Ensure /mnt/shared exists and has correct permissions for hostPath usage (A3 Excellent)
+      ansible.builtin.file:
+        path: /mnt/shared
+        state: directory
+        owner: vagrant
+        group: vagrant
+        mode: '0777'
+
