@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: sms-model
+  name: sms-model-latest
   labels:
     app: sms-model
 spec:
@@ -13,10 +13,37 @@ spec:
     metadata:
       labels:
         app: sms-model
+        version: latest
     spec:
       containers:
-      - name: sms-model
+      - name: sms-model-latest
         image: ghcr.io/doda25-team16/model-service:latest
+        ports:
+          - containerPort: 8081
+        env:
+          - name: MODEL_PORT
+            value: "8081"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sms-model-v1
+  labels:
+    app: sms-model
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sms-model
+  template:
+    metadata:
+      labels:
+        app: sms-model
+        version: v1
+    spec:
+      containers:
+      - name: sms-model-v1
+        image: ghcr.io/doda25-team16/model-service:0.0.3
         ports:
           - containerPort: 8081
         env:

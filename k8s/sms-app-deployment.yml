@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: sms-app
+  name: sms-app-latest
   labels:
     app: sms-app
 spec:
@@ -13,9 +13,10 @@ spec:
     metadata:
       labels:
         app: sms-app
+        version: latest
     spec:
       containers:
-      - name: sms-app
+      - name: sms-app-latest
         image: ghcr.io/doda25-team16/app:latest
         ports:
           - containerPort: 8080
@@ -37,4 +38,44 @@ spec:
               secretKeyRef:
                 name: sms-app-secret
                 key: MY_SECRET
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sms-app-v1
+  labels:
+    app: sms-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sms-app
+  template:
+    metadata:
+      labels:
+        app: sms-app
+        version: v1
+    spec:
+      containers:
+      - name: sms-app-v1
+        image: ghcr.io/doda25-team16/app:0.0.1
+        ports:
+          - containerPort: 8080
+        env:
+          - name: SERVER_PORT
+            valueFrom:
+              configMapKeyRef:
+                name: sms-app-config
+                key: SERVER_PORT
+
+          - name: MODEL_SERVICE_URL
+            valueFrom:
+              configMapKeyRef:
+                name: sms-app-config
+                key: MODEL_SERVICE_URL
           
+          - name: SECRET
+            valueFrom:
+              secretKeyRef:
+                name: sms-app-secret
+                key: MY_SECRET
