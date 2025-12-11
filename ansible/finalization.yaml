@@ -83,4 +83,228 @@
         --set controller.service.loadBalancerIP=192.168.56.90
       environment:
         KUBECONFIG: /home/vagrant/.kube/config
+
+
+    # Step 22: Kubernetes Dashboard
+    - name: Check if Helm is installed
+      become_user: vagrant
+      ansible.builtin.command: which helm
+      register: helm_check
+      ignore_errors: yes
+
+    - name: Download Helm install script
+      ansible.builtin.get_url:
+        url: https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+        dest: /tmp/get_helm.sh
+        mode: '0700'
+      when: helm_check.rc != 0
+
+    - name: Install Helm
+      ansible.builtin.shell: /tmp/get_helm.sh
+      when: helm_check.rc != 0
+
+    # Add and update Dashboard repo
+    - name: Add Kubernetes Dashboard repo
+      become_user: vagrant
+      ansible.builtin.command: helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/
+      environment:
+        KUBECONFIG: /home/vagrant/.kube/config
+      ignore_errors: yes
+
+    - name: Update Helm repos
+      become_user: vagrant
+      ansible.builtin.command: helm repo update
+      environment:
+        KUBECONFIG: /home/vagrant/.kube/config
+
+    # Install Dashboard using Helm
+    - name: Install Dashboard
+      become_user: vagrant
+      ansible.builtin.command: >
+        helm upgrade --install kubernetes-dashboard
+        kubernetes-dashboard/kubernetes-dashboard
+        --namespace kubernetes-dashboard
+        --create-namespace
+      environment:
+        KUBECONFIG: /home/vagrant/.kube/config
+
+    # Create ServiceAccount
+    - name: Write ServiceAccount YAML
+      ansible.builtin.copy:
+        dest: /tmp/dashboard-adminuser.yaml
+        content: |
+          apiVersion: v1
+          kind: ServiceAccount
+          metadata:
+            name: admin-user
+            namespace: kubernetes-dashboard
+
+    - name: Apply ServiceAccount
+      become_user: vagrant
+      ansible.builtin.command: kubectl apply -f /tmp/dashboard-adminuser.yaml
+      environment:
+        KUBECONFIG: /home/vagrant/.kube/config
+
+    # Create ClusterRoleBinding
+    - name: Write ClusterRoleBinding YAML
+      ansible.builtin.copy:
+        dest: /tmp/dashboard-clusterrolebinding.yaml
+        content: |
+          apiVersion: rbac.authorization.k8s.io/v1
+          kind: ClusterRoleBinding
+          metadata:
+            name: admin-user
+          roleRef:
+            apiGroup: rbac.authorization.k8s.io
+            kind: ClusterRole
+            name: cluster-admin
+          subjects:
+          - kind: ServiceAccount
+            name: admin-user
+            namespace: kubernetes-dashboard
+
+    - name: Apply ClusterRoleBinding
+      become_user: vagrant
+      ansible.builtin.command: kubectl apply -f /tmp/dashboard-clusterrolebinding.yaml
+      environment:
+        KUBECONFIG: /home/vagrant/.kube/config
+
+    # Create Ingress for Dashboard
+    - name: Write Dashboard Ingress YAML
+      ansible.builtin.copy:
+        dest: /tmp/dashboard-ingress.yaml
+        content: |
+          apiVersion: networking.k8s.io/v1
+          kind: Ingress
+          metadata:
+            name: kubernetes-dashboard
+            namespace: kubernetes-dashboard
+            annotations:
+              nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+              nginx.ingress.kubernetes.io/ssl-redirect: "false"
+          spec:
+            ingressClassName: nginx
+            rules:
+            - host: dashboard.local
+              http:
+                paths:
+                - path: /
+                  pathType: Prefix
+                  backend:
+                    service:
+                      name: kubernetes-dashboard-kong-proxy
+                      port:
+                        number: 443
+
+    - name: Wait for Nginx Ingress admission webhook to be ready
+      become_user: vagrant
+      ansible.builtin.command: kubectl wait --namespace ingress-nginx --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=120s
+      environment:
+        KUBECONFIG: /home/vagrant/.kube/config
+      register: nginx_wait
+      retries: 3
+      delay: 10
+      until: nginx_wait.rc == 0
+
+    - name: Apply Dashboard Ingress
+      become_user: vagrant
+      ansible.builtin.command: kubectl apply -f /tmp/dashboard-ingress.yaml
+      environment:
+        KUBECONFIG: /home/vagrant/.kube/config
+
+    # Step 23: Install Istio
+
+    - name: Check if Istio folder exists
+      ansible.builtin.stat:
+        path: /opt/istio-1.28.0
+      register: istio_dir
+
+    - name: Download Istio 1.28.0
+      ansible.builtin.get_url:
+        url: https://github.com/istio/istio/releases/download/1.28.0/istio-1.28.0-linux-amd64.tar.gz
+        dest: /tmp/istio.tar.gz
+        mode: '0644'
+      when: not istio_dir.stat.exists
+
+    - name: Extract Istio
+      ansible.builtin.unarchive:
+        src: /tmp/istio.tar.gz
+        dest: /opt
+        remote_src: yes
+      when: not istio_dir.stat.exists
+
+    - name: Ensure Istio directory is accessible
+      ansible.builtin.file:
+        path: /opt/istio-1.28.0
+        mode: '0755'
+        recurse: yes
+
+    - name: Ensure Istio bin directory is accessible
+      ansible.builtin.file:
+        path: /opt/istio-1.28.0/bin
+        mode: '0755'
+
+    - name: Ensure istioctl binary is executable
+      ansible.builtin.file:
+        path: /opt/istio-1.28.0/bin/istioctl
+        mode: '0755'
+
+    - name: Add istioctl to PATH for vagrant user
+      become_user: vagrant
+      ansible.builtin.lineinfile:
+        path: /home/vagrant/.bashrc
+        line: 'export PATH=$PATH:/opt/istio-1.28.0/bin'
+        create: yes
+
+    - name: Symlink istioctl to /usr/local/bin
+      ansible.builtin.file:
+        src: /opt/istio-1.28.0/bin/istioctl
+        dest: /usr/local/bin/istioctl
+        state: link
+        force: yes
+
+    - name: Create Istio configuration
+      become_user: vagrant
+      ansible.builtin.copy:
+        content: |
+          apiVersion: install.istio.io/v1alpha1
+          kind: IstioOperator
+          spec:
+            components:
+              ingressGateways:
+              - name: istio-ingressgateway
+                enabled: true
+                k8s:
+                  service:
+                    type: LoadBalancer
+                    loadBalancerIP: 192.168.56.91
+                  resources:
+                    requests:
+                      cpu: 50m
+                      memory: 128Mi
+                    limits:
+                      cpu: 500m
+                      memory: 512Mi
+            values:
+              pilot:
+                resources:
+                  requests:
+                    cpu: 50m
+                    memory: 128Mi
+        dest: /home/vagrant/istio-config.yaml
+
+    - name: Check if Istio is already installed
+      become_user: vagrant
+      ansible.builtin.shell: kubectl get namespace istio-system 2>/dev/null || echo "not_installed"
+      register: istio_check
+      environment:
+        KUBECONFIG: /home/vagrant/.kube/config
+
+    - name: Install Istio
+      become_user: vagrant
+      ansible.builtin.command: /usr/local/bin/istioctl install -y -f /home/vagrant/istio-config.yaml
+      environment:
+        KUBECONFIG: /home/vagrant/.kube/config
+      when: istio_check.stdout == "not_installed"
+    
     
