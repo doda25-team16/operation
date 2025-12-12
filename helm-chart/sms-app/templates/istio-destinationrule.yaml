@@ -1,6 +1,6 @@
 apiVersion: networking.istio.io/v1beta1
 kind: DestinationRule
-metadata: { name: sms-app-dr }
+metadata: { name: {{ .Values.app.name }}-dr}
 spec:
   host: sms-app
   subsets:
@@ -11,7 +11,7 @@ spec:
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: DestinationRule
-metadata: { name: sms-model-dr }
+metadata: { name: {{ .Values.model.name }}-dr}
 spec:
   host: sms-model
   subsets:

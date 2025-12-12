@@ -63,3 +63,13 @@ resources: {}
   # requests:
   #   cpu: 100m
   #   memory: 128Mi
+
+# Istio Configurations
+trafficManagement:
+  rateLimit:
+    requestsPerMinute: 10
+    enabled: true
+
+  splitting:
+    stableWeight: 90 
+    canaryWeight: 10
