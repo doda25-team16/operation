@@ -73,3 +73,4 @@ Worked on steps 8, 9 10 and 11 of A2. These envolved ensuring all nodes are reac
 
 - Caio: https://github.com/doda25-team16/operation/pull/61 I worked on the traffic management section of A4. This involved adding the istio configurations for a canary release. Thus, I applied what was previously seen in class for istio and a canary release to our project with some modifications to make it work for our case. I also gave each version of sms-app and model a different weight (90 and 10).
 - Ignas: Continued working on finishing alerting from A3. Implemented Rate limiting as an additional usecase from A4.
+- Uddhav: https://github.com/doda25-team16/operation/pull/64 - I worked on parts of A2 and A3 to make the 'Kubernetes Usage' part of A3 fall in accordance with the 'Excellent' rubric. In particular I made sure all VMs mount /mnt/shared into the VM.
