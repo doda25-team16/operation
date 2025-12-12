@@ -5,7 +5,7 @@
 
 {{- if ne $sum 100 -}}
   {{- fail (printf "Traffic Split Invalid / Imbalance: stableWeight + canaryWeight != 100") -}}
-{{- end -}}
+{{- end}}
 
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService

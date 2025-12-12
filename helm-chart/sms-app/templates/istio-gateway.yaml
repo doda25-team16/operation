@@ -3,11 +3,13 @@ apiVersion: networking.istio.io/v1beta1
 kind: Gateway
 metadata: { name: my-gateway }
 spec:
-  selector: { istio: ingressgateway }
+  selector: {{ .Values.istio.gatewaySelector | toYaml | nindent 4 }} # Indent determines current file structure level
   servers:
   - port: { number: 80, name: http, protocol: HTTP }
     hosts: [ "*" ]
+
 ---
+
 # 2. Additional Use Case:Request rate limit
 apiVersion: networking.istio.io/v1alpha3
 kind: EnvoyFilter
@@ -16,8 +18,7 @@ metadata:
   namespace: istio-system
 spec:
   workloadSelector:
-    labels:
-      istio: ingressgateway
+    labels: {{ .Values.istio.gatewaySelector | toYaml | nindent 6 }}
   configPatches:
   - applyTo: HTTP_FILTER
     match:

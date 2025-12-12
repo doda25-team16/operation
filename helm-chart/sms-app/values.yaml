@@ -65,6 +65,10 @@ resources: {}
   #   memory: 128Mi
 
 # Istio Configurations
+istio:
+  gatewaySelector:
+    istio_name_label: ingressgateway # name of the ingress selector
+
 trafficManagement:
   rateLimit:
     requestsPerMinute: 10
