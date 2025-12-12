@@ -68,3 +68,11 @@ Worked on steps 8, 9 10 and 11 of A2. These envolved ensuring all nodes are reac
   I worked on the leftover tasks from A2, specifically steps 17, 18 and 19. The steps involved generating and running join commands, and the necessary changes have been made to the ctrl and node yaml files
 
 - Job: https://github.com/doda25-team16/operation/pull/53 and https://github.com/doda25-team16/operation/pull/52, Made a working helm chart that runs the project and implemented steps 22 and 23 from a2.
+
+### Week Q2.5 (Dec 8+)
+
+- Caio: https://github.com/doda25-team16/operation/pull/61 I worked on the traffic management section of A4. This involved adding the istio configurations for a canary release. Thus, I applied what was previously seen in class for istio and a canary release to our project with some modifications to make it work for our case. I also gave each version of sms-app and model a different weight (90 and 10).
+- Ignas: Continued working on finishing alerting from A3. Implemented Rate limiting as an additional usecase from A4.
+- Uddhav: https://github.com/doda25-team16/operation/pull/64 - I worked on parts of A2 and A3 to make the 'Kubernetes Usage' part of A3 fall in accordance with the 'Excellent' rubric. In particular I made sure all VMs mount /mnt/shared into the VM.
+- Job: https://github.com/doda25-team16/operation/pull/65 and https://github.com/doda25-team16/operation/pull/66. Worked on making the documentation and creating an extension proposal.
+- Johnny: https://github.com/doda25-team16/operation/pull/67 Continued off of Caio and Ignas's work on Traffic Management + Istio. None of their work was included in the Helm Chart so I did the migration over + added configurable values for stable & canary splits + made ingress gateway selector customizable and able to accept multiple ingress gateway pods.

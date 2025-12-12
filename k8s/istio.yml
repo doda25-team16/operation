@@ -1,0 +1,90 @@
+# 1. Basic Istio setup for traffic management
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata: { name: my-gateway }
+spec:
+  selector: { istio: ingressgateway }
+  servers:
+  - port: { number: 80, name: http, protocol: HTTP }
+    hosts: [ "*" ]
+---
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata: { name: sms-app-dr }
+spec:
+  host: sms-app
+  subsets:
+  - name: latest
+    labels: { version: latest }
+  - name: v1
+    labels: { version: v1 }
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata: { name: my-entry-service }
+spec:
+  gateways: [ my-gateway ]
+  hosts: [ "*" ]
+  http:
+  - match:
+    - uri: { prefix: / }
+    route:
+    - destination: { host: sms-app, subset: latest }
+      weight: 90
+    - destination: { host: sms-app, subset: v1 }
+      weight: 10
+---
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata: { name: sms-model-dr }
+spec:
+  host: sms-model
+  subsets:
+  - name: latest
+    labels: { version: latest }
+  - name: v1
+    labels: { version: v1 }
+---
+# 2. Additional Use Case: Request rate limit
+apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: rate-limit-filter
+spec:
+  workloadSelector:
+    labels:
+      istio: ingressgateway
+  configPatches:
+  - applyTo: HTTP_FILTER
+    match:
+      context: GATEWAY
+      listener:
+        filterChain:
+          filter:
+            name: envoy.filters.network.http_connection_manager
+            subFilter:
+              name: envoy.filters.http.router
+    patch:
+      # do this before every request to the gateway
+      operation: INSERT_BEFORE
+      value:
+        name: envoy.filters.http.local_ratelimit
+        typed_config:
+          '@type': type.googleapis.com/udpa.type.v1.TypedStruct
+          type_url: type.googleapis.com/envoy.extensions.filters.http.local_ratelimit.v3.LocalRateLimit
+          value:
+            stat_prefix: http_local_rate_limiter
+            # each minute user gets 10 requests, reset every minute
+            token_bucket:
+              max_tokens: 10
+              tokens_per_fill: 10
+              fill_interval: 60s
+            # rate limit 100% of requests for now
+            filter_enabled:
+              default_value:
+                numerator: 100
+                denominator: HUNDRED
+            filter_enforced:
+              default_value:
+                numerator: 100
+                denominator: HUNDRED
