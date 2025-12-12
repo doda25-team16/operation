@@ -40,3 +40,16 @@ The following can be validated in their respective repositories:
 - For this assignment, we moved all provisioning code from `model-service` to `operation` repo, where it can be found now.
 - The only part of A3 fully finished is the migration from docker compose to kubernetes.
 - Other steps, so Helm, Monitoring, Alerting and Grafana have some start made, but are not fully functional yet. Because we spent the time finalizing A2 in the mean time.
+
+## Assignment 4
+### Links
+- operation: https://github.com/doda25-team16/operation/tree/a4-v2
+- backend: https://github.com/doda25-team16/model-service/tree/a4-v2
+- frontend: https://github.com/doda25-team16/app/tree/a4-v2
+- lib: https://github.com/doda25-team16/lib-version/tree/a4-v2
+
+### Comments
+- Running info can be found in `operation/README.md`
+- Of A4 we have implemented the `Documentation` and `Traffic management` parts. These can both be found in the `operation` repo where it would be expected.
+- One `Additional Use Case` has been implemented, namely traffic rate limiting for Istio also in `operation`.
+- `Continious Experimentation` has not been implemented yet.
