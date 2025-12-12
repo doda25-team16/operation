@@ -1,0 +1,42 @@
+# Vagrant
+.vagrant/
+*.box
+
+# Ansible
+*.retry
+ansible/ssh_keys/*.pem
+ansible/ssh_keys/*_rsa
+!ansible/ssh_keys/*.pub
+
+# Helm
+helm-chart/**/charts/
+helm-chart/**/Chart.lock
+
+# Kubernetes
+*.kubeconfig
+kubeconfig*
+
+# Terraform (if used)
+.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Temporary files
+tmp/
+temp/
+*.tmp
