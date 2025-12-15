@@ -1,12 +1,15 @@
 # Vagrant
 .vagrant/
 *.box
+shared/
 
 # Ansible
 *.retry
 ansible/ssh_keys/*.pem
 ansible/ssh_keys/*_rsa
 !ansible/ssh_keys/*.pub
+ansible/admin.conf
+admin.conf
 
 # Helm
 helm-chart/**/charts/

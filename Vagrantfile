@@ -1,6 +1,17 @@
 # model-service/Vagrantfile
+
+require "fileutils"
 NUMBER_OF_WORKERS = 2
 
+# HOST Configuration
+# Automatically create a shared portable folder if does not exist
+local_shared_path = File.join(File.dirname(__FILE__), "shared")
+unless File.directory?(local_shared_path)
+  puts "./shared directory does not exist. Creating one under: #{local_shared_path}"
+  FileUtils.mkdir(local_shared_path)
+end
+
+# NODES Configuration
 Vagrant.configure("2") do |config|
   hosts_list = []
 
@@ -15,10 +26,11 @@ Vagrant.configure("2") do |config|
     vb.gui = false
   end
 
+
   # Shared folder for A3 Excellent
-  config.vm.synced_folder "/home/uddhav-pisharody/shared", "/mnt/shared", type: "rsync", rsync__auto: true
-
-
+  config.vm.synced_folder local_shared_path, "/mnt/shared",
+    type: "virtualbox",
+    mount_options: ["dmode=777", "fmode=777"]
 
   # Control Node
   config.vm.define "ctrl" do |ctrl|
@@ -61,7 +73,7 @@ Vagrant.configure("2") do |config|
       node.vm.network "private_network", ip: "192.168.56.10#{i}" # ip is indexed by worker#
       
       node.vm.provider "virtualbox" do |nvb| # nvb = worker virtual box
-        nvb.memory = 6144
+        nvb.memory = 4096 # previously 6144
         nvb.cpus = 2
       end
       # After VM initialization, set-up General Node
