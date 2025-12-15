@@ -73,7 +73,7 @@ Vagrant.configure("2") do |config|
       node.vm.network "private_network", ip: "192.168.56.10#{i}" # ip is indexed by worker#
       
       node.vm.provider "virtualbox" do |nvb| # nvb = worker virtual box
-        nvb.memory = 4096 # previously 6144
+        nvb.memory = 6144
         nvb.cpus = 2
       end
       # After VM initialization, set-up General Node
