@@ -76,3 +76,7 @@ Worked on steps 8, 9 10 and 11 of A2. These envolved ensuring all nodes are reac
 - Uddhav: https://github.com/doda25-team16/operation/pull/64 - I worked on parts of A2 and A3 to make the 'Kubernetes Usage' part of A3 fall in accordance with the 'Excellent' rubric. In particular I made sure all VMs mount /mnt/shared into the VM.
 - Job: https://github.com/doda25-team16/operation/pull/65 and https://github.com/doda25-team16/operation/pull/66. Worked on making the documentation and creating an extension proposal.
 - Johnny: https://github.com/doda25-team16/operation/pull/67 Continued off of Caio and Ignas's work on Traffic Management + Istio. None of their work was included in the Helm Chart so I did the migration over + added configurable values for stable & canary splits + made ingress gateway selector customizable and able to accept multiple ingress gateway pods.
+
+### Week Q2.6 (Dec 15+)
+
+- Johnny: https://github.com/doda25-team16/operation/pull/69 Small changes this week, spent a lot of time on debugging why our Helm Installation wasn't working after our latest push to main. Some hard-coded paths were pushed onto main (related to storage). Also made some small tweaks to provisioning and deployments.
