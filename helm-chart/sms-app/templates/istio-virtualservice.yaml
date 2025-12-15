@@ -11,13 +11,18 @@ apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata: { name: my-entry-service }
 spec:
-  gateways: [ my-gateway ]
+  gateways:
+  - {{ .Values.istio.gatewayName | default "my-gateway" }}
   hosts: [ "*" ]
   http:
   - match:
     - uri: { prefix: / }
     route:
-    - destination: { host: {{ .Values.app.name }}, subset: latest }
-      weight: {{ .Values.trafficManagement.splitting.stableWeight }}
-    - destination: { host: {{ .Values.app.name }}, subset: v1 }
-      weight: {{ .Values.trafficManagement.splitting.canaryWeight }}
+    - destination:
+        host: {{ .Values.app.name }}
+        subset: stable
+      weight: 90
+    - destination:
+        host: {{ .Values.app.name }}
+        subset: canary
+      weight: 10

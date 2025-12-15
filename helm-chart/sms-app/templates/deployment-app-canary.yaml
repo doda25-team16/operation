@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.app.name }}
+  name: {{ .Values.app.name }}-canary
   namespace: {{ .Values.namespace }}
   labels:
     app: {{ .Values.app.name }}
@@ -13,13 +13,13 @@ spec:
     matchLabels:
       app: {{ .Values.app.name }}
       release: {{ .Release.Name }}
-      version: stable
+      version: canary
   template:
     metadata:
       labels:
         app: {{ .Values.app.name }}
         release: {{ .Release.Name }}
-        version: stable
+        version: canary
     spec:
       volumes:
         - name: shared-volume
@@ -54,6 +54,8 @@ spec:
               secretKeyRef:
                 name: {{ .Values.app.name }}-secret
                 key: MY_SECRET
+          - name: EXPERIMENT-VARIANT
+            value: canary
         {{- if .Values.resources }}
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
