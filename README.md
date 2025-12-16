@@ -39,7 +39,8 @@ http://localhost:8080/sms
 
 ### Flexible Configuration
 
-The services are configured to be flexible using environment variables. You can override the default ports by setting them in your terminal session before running docker compose.
+
+The services are configured to be flexible using environment variables. You can override the default ports by setting them in your terminal session or by setting them in a .env file before running docker compose.
 
 
 | Variable  | Service  | Default  | Description  |
@@ -48,15 +49,34 @@ The services are configured to be flexible using environment variables. You can 
 | `MODEL_PORT`  | `sms-model`  | `8081`  | Port the model service will listen on for the frontend requests.  |
 
 
-### Example: Running the Frontend on port 9000 and the Model on port 8090:
+### Example: Running the Frontend on port 9000 and the Model on port 8090 using the terminal:
 
 ```
 SERVER_PORT=9000 MODEL_PORT=8090 docker compose up -d
 ```
 
-
-
 (After running the example, access the app at http://localhost:9000/sms)
+
+### Example: Running the Frontend on port 9000 and the Model on port 8090 using a .env file:
+
+
+An example .env file can be found in the operations repository and includes all necessary variables. They are currently set to their default values. However, changing them to what is seen above will make them accessible in the same place
+
+If you are using the .env file, then you can simply run:
+
+
+```
+docker compose up -d
+```
+
+
+The file will automatically grab the necessary environment variables to run the program.
+
+
+If no .env is found it will use the default variables.
+
+
+- After running the example, simply go to http://localhost:SERVERPORT_VALUE/sms where SERVERPORT_VALUE represents the value given to SERVERPORT.
 
 ### Stopping the Cluster
 
