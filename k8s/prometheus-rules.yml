@@ -1,0 +1,29 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: sms-app-alerts
+  namespace: monitoring
+  labels:
+    release: prometheus
+spec:
+  groups:
+    - name: sms-app
+      interval: 15s
+      rules:
+        - alert: HighResponseTime
+          expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{app="sms-app"}[5m])) > 2
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "High response time on app"
+            description: "95th percentile response time is {{ $value }}s"
+        
+        - alert: HighMemoryUsage
+          expr: container_memory_usage_bytes{pod=~"sms-app.*"} / container_spec_memory_limit_bytes{pod=~"sms-app.*"} > 0.9
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "High memory usage on app"
+            description: "Memory usage is {{ $value | humanizePercentage }}"
