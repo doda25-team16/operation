@@ -80,3 +80,5 @@ Worked on steps 8, 9 10 and 11 of A2. These envolved ensuring all nodes are reac
 ### Week Q2.6 (Dec 15+)
 
 - Johnny: https://github.com/doda25-team16/operation/pull/69 Small changes this week, spent a lot of time on debugging why our Helm Installation wasn't working after our latest push to main. Some hard-coded paths were pushed onto main (related to storage). Also made some small tweaks to provisioning and deployments.
+
+- Caio: https://github.com/doda25-team16/operation/pull/70 This week I read through some of the feedback recieved for assignment 1. I saw that we where missing the .env file for that assignment and I decided to implement it into our project. I also then updated the readme accordingly and was able to get it all working.
