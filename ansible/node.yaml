@@ -23,5 +23,9 @@
     - name: Join cluster
       become: yes
       shell: "{{ join_cmd.stdout }} --ignore-preflight-errors=all"
+      register: join_cluster_result
+      retries: 3
+      delay: 30
+      until: join_cluster_result.rc == 0
       args:
         creates: /etc/kubernetes/kubelet.conf
