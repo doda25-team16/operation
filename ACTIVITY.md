@@ -84,3 +84,5 @@ Worked on steps 8, 9 10 and 11 of A2. These envolved ensuring all nodes are reac
 - Yuting: https://github.com/doda25-team16/operation/pull/73 I continued with the Grafana Dashboard task this week. This involved creating a dashboard and connect to Prometheus automatically. I spent a lot of time debugging the issues of vagrant provision on my host machine. The nodes couldn't be joined automatically and provision didn't work. After this task, I will continue with improving A3 and A4.
 
 - Caio: https://github.com/doda25-team16/operation/pull/70 This week I read through some of the feedback recieved for assignment 1. I saw that we where missing the .env file for that assignment and I decided to implement it into our project. I also then updated the readme accordingly and was able to get it all working.
+
+- Job: https://github.com/doda25-team16/lib-version/pull/4 and https://github.com/doda25-team16/app/pull/10: This week, I went back to see what we had missed from previous weeks and looked into how we could reuse our lib-version in other parts of our code.
