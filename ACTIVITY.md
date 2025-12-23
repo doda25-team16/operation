@@ -86,3 +86,5 @@ Worked on steps 8, 9 10 and 11 of A2. These envolved ensuring all nodes are reac
 - Caio: https://github.com/doda25-team16/operation/pull/70 This week I read through some of the feedback recieved for assignment 1. I saw that we where missing the .env file for that assignment and I decided to implement it into our project. I also then updated the readme accordingly and was able to get it all working.
 
 - Job: https://github.com/doda25-team16/lib-version/pull/4 and https://github.com/doda25-team16/app/pull/10: This week, I went back to see what we had missed from previous weeks and looked into how we could reuse our lib-version in other parts of our code.
+
+- Uddhav: https://github.com/doda25-team16/operation/pull/68 I reworked on the Traffic Management part of A4 this week so that I can move forward with the Continuous Experimentation part. The TM does work now, but it could still use some changes which i am currently working on now.
