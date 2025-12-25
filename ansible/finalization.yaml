@@ -307,4 +307,40 @@
         KUBECONFIG: /home/vagrant/.kube/config
       when: istio_check.stdout == "not_installed"
     
-    
+    # For A3: Install Prometheus Stack
+
+    - name: Add Prometheus Helm repository
+      become_user: vagrant
+      ansible.builtin.command: helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+      environment:
+        KUBECONFIG: /home/vagrant/.kube/config
+
+    - name: Update Helm repositories for Prometheus
+      become_user: vagrant
+      ansible.builtin.command: helm repo update
+      environment:
+        KUBECONFIG: /home/vagrant/.kube/config
+
+    - name: Install Prometheus Stack
+      become_user: vagrant
+      ansible.builtin.command: >
+        helm upgrade --install prometheus prometheus-community/kube-prometheus-stack
+        --namespace monitoring
+        --create-namespace
+        --set prometheus.prometheusSpec.serviceMonitorSelectorNilUsesHelmValues=false
+        --set prometheus.prometheusSpec.retention=7d
+        --set alertmanager.enabled=true
+        --set grafana.enabled=true
+        --set grafana.adminPassword=admin
+      environment:
+        KUBECONFIG: /home/vagrant/.kube/config
+
+    - name: Wait for Prometheus to be ready
+      become_user: vagrant
+      ansible.builtin.command: kubectl wait --namespace monitoring --for=condition=ready pod -l app.kubernetes.io/name=prometheus --timeout=300s
+      environment:
+        KUBECONFIG: /home/vagrant/.kube/config
+      register: prometheus_wait
+      retries: 3
+      delay: 10
+      until: prometheus_wait.rc == 0
