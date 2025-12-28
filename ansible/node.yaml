@@ -1,6 +1,9 @@
 ---
 - hosts: all
   become: yes
+  vars:
+    kube_user: "vagrant"
+    ansible_user_home: "/home/vagrant"
   tasks:
     - name: Install worker dependencies
       debug: 
@@ -18,6 +21,7 @@
       command: kubeadm token create --print-join-command
       register: join_cmd
       changed_when: false
+      when: not kubelet_conf.stat.exists
 
     # Step 19
     - name: Join cluster
@@ -29,3 +33,4 @@
       until: join_cluster_result.rc == 0
       args:
         creates: /etc/kubernetes/kubelet.conf
+      when: not kubelet_conf.stat.exists

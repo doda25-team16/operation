@@ -21,9 +21,9 @@ stringData:
         webhook_configs:
           - url: 'http://localhost:5001/webhook'
             send_resolved: true
-      # Add others todo
+      # Email can be configured here
       # - name: 'email'
       #   email_configs:
-      #     - to: 'your-email@example.com'
-      #       from: 'alertmanager@example.com'
+      #     - to: 'group16doda@example.com'
+      #       from: 'sms-app-alerts@example.com'
       #       smarthost: 'smtp.gmail.com:587'
