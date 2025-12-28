@@ -15,9 +15,9 @@ end
 Vagrant.configure("2") do |config|
   hosts_list = []
 
-  hosts_list << {"VM_name" => "ctrl", "ip" => "192.168.56.100"}
+  hosts_list << {"VM_name" => "ctrl", "ip" => "192.168.56.110"}
   (1..NUMBER_OF_WORKERS).each do |i|
-    hosts_list << {"VM_name" => "node-#{i}", "ip" => "192.168.56.#{100 + i}"}
+    hosts_list << {"VM_name" => "node-#{i}", "ip" => "192.168.56.#{110 + i}"}
   end
 
   # Default Nodes
@@ -36,7 +36,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "ctrl" do |ctrl|
     ctrl.vm.hostname = "ctrl"
     # "host-only" interface (NIC)
-    ctrl.vm.network "private_network", ip: "192.168.56.100"
+    ctrl.vm.network "private_network", ip: "192.168.56.110"
     
     ctrl.vm.provider "virtualbox" do |wvb| # wvb = worker virtual box
       wvb.memory = 4096
@@ -70,7 +70,7 @@ Vagrant.configure("2") do |config|
     config.vm.define "node-#{i}" do |node|
       node.vm.hostname = "node-#{i}"
       # "host-only" interface (NIC)
-      node.vm.network "private_network", ip: "192.168.56.#{100 + i}" # ip is indexed by worker#
+      node.vm.network "private_network", ip: "192.168.56.#{110 + i}" # ip is indexed by worker#
       
       node.vm.provider "virtualbox" do |nvb| # nvb = worker virtual box
         nvb.memory = 6144
