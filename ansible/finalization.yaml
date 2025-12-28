@@ -1,27 +1,30 @@
 - hosts: all
   become: yes
+  vars:
+    kube_user: "vagrant"
+    ansible_user_home: "/home/vagrant"
   tasks:
     # Step 20: Install MetalLB
     - name: Install MetalLB CRDs (#20a)
-      become_user: vagrant
+      become_user: "{{ kube_user }}"
       ansible.builtin.shell: kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.14.9/config/manifests/metallb-native.yaml --insecure-skip-tls-verify=true
       args:
-        creates: /home/vagrant/.metallb-installed
+        creates: "{{ ansible_user_home }}/.metallb-installed"
       environment:
-        KUBECONFIG: /home/vagrant/.kube/config
+        KUBECONFIG: "{{ ansible_user_home }}/.kube/config"
 
     - name: Wait for MetalLB controller to be ready (#20b)
-      become_user: vagrant
+      become_user: "{{ kube_user }}"
       ansible.builtin.command: kubectl wait -n metallb-system -l app=metallb,component=controller --for=condition=ready pod --timeout=60s
       register: metallb_wait
       retries: 3
       delay: 10
       until: metallb_wait.rc == 0
       environment:
-        KUBECONFIG: /home/vagrant/.kube/config
+        KUBECONFIG: "{{ ansible_user_home }}/.kube/config"
 
     - name: Create IPAddressPool configuration (#20c)
-      become_user: vagrant
+      become_user: "{{ kube_user }}"
       ansible.builtin.copy:
         content: |
           apiVersion: metallb.io/v1beta1
@@ -35,13 +38,13 @@
         dest: /tmp/metallb-ipaddresspool.yaml
 
     - name: Apply IPAddressPool (#20d)
-      become_user: vagrant
+      become_user: "{{ kube_user }}"
       ansible.builtin.command: kubectl apply -f /tmp/metallb-ipaddresspool.yaml
       environment:
-        KUBECONFIG: /home/vagrant/.kube/config
+        KUBECONFIG: "{{ ansible_user_home }}/.kube/config"
 
     - name: Create L2Advertisement configuration (#20e)
-      become_user: vagrant
+      become_user: "{{ kube_user }}"
       ansible.builtin.copy:
         content: |
           apiVersion: metallb.io/v1beta1
@@ -55,39 +58,37 @@
         dest: /tmp/metallb-l2advertisement.yaml
 
     - name: Apply L2Advertisement (#20f)
-      become_user: vagrant
+      become_user: "{{ kube_user }}"
       ansible.builtin.command: kubectl apply -f /tmp/metallb-l2advertisement.yaml
       environment:
-        KUBECONFIG: /home/vagrant/.kube/config
+        KUBECONFIG: "{{ ansible_user_home }}/.kube/config"
 
     # Step 21: Install Nginx Ingress Controller
     - name: Add Nginx Ingress Helm repository (#21a)
-      become_user: vagrant
+      become_user: "{{ kube_user }}"
       ansible.builtin.command: helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
       environment:
-        KUBECONFIG: /home/vagrant/.kube/config
+        KUBECONFIG: "{{ ansible_user_home }}/.kube/config"
 
     - name: Update Helm repositories (#21b)
-      become_user: vagrant
+      become_user: "{{ kube_user }}"
       ansible.builtin.command: helm repo update
       environment:
-        KUBECONFIG: /home/vagrant/.kube/config
+        KUBECONFIG: "{{ ansible_user_home }}/.kube/config"
 
     - name: Install Nginx Ingress Controller (#21c)
-      become_user: vagrant
-      # manually assign to first IP from metallb pool
+      become_user: "{{ kube_user }}"
       ansible.builtin.command: >
-        helm install ingress-nginx ingress-nginx/ingress-nginx
+        helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx
         --namespace ingress-nginx
         --create-namespace
         --set controller.service.loadBalancerIP=192.168.56.90
       environment:
-        KUBECONFIG: /home/vagrant/.kube/config
-
+        KUBECONFIG: "{{ ansible_user_home }}/.kube/config"
 
     # Step 22: Kubernetes Dashboard
     - name: Check if Helm is installed
-      become_user: vagrant
+      become_user: "{{ kube_user }}"
       ansible.builtin.command: which helm
       register: helm_check
       ignore_errors: yes
@@ -103,32 +104,29 @@
       ansible.builtin.shell: /tmp/get_helm.sh
       when: helm_check.rc != 0
 
-    # Add and update Dashboard repo
     - name: Add Kubernetes Dashboard repo
-      become_user: vagrant
+      become_user: "{{ kube_user }}"
       ansible.builtin.command: helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/
       environment:
-        KUBECONFIG: /home/vagrant/.kube/config
+        KUBECONFIG: "{{ ansible_user_home }}/.kube/config"
       ignore_errors: yes
 
     - name: Update Helm repos
-      become_user: vagrant
+      become_user: "{{ kube_user }}"
       ansible.builtin.command: helm repo update
       environment:
-        KUBECONFIG: /home/vagrant/.kube/config
+        KUBECONFIG: "{{ ansible_user_home }}/.kube/config"
 
-    # Install Dashboard using Helm
     - name: Install Dashboard
-      become_user: vagrant
+      become_user: "{{ kube_user }}"
       ansible.builtin.command: >
         helm upgrade --install kubernetes-dashboard
         kubernetes-dashboard/kubernetes-dashboard
         --namespace kubernetes-dashboard
         --create-namespace
       environment:
-        KUBECONFIG: /home/vagrant/.kube/config
+        KUBECONFIG: "{{ ansible_user_home }}/.kube/config"
 
-    # Create ServiceAccount
     - name: Write ServiceAccount YAML
       ansible.builtin.copy:
         dest: /tmp/dashboard-adminuser.yaml
@@ -140,12 +138,11 @@
             namespace: kubernetes-dashboard
 
     - name: Apply ServiceAccount
-      become_user: vagrant
+      become_user: "{{ kube_user }}"
       ansible.builtin.command: kubectl apply -f /tmp/dashboard-adminuser.yaml
       environment:
-        KUBECONFIG: /home/vagrant/.kube/config
+        KUBECONFIG: "{{ ansible_user_home }}/.kube/config"
 
-    # Create ClusterRoleBinding
     - name: Write ClusterRoleBinding YAML
       ansible.builtin.copy:
         dest: /tmp/dashboard-clusterrolebinding.yaml
@@ -164,10 +161,10 @@
             namespace: kubernetes-dashboard
 
     - name: Apply ClusterRoleBinding
-      become_user: vagrant
+      become_user: "{{ kube_user }}"
       ansible.builtin.command: kubectl apply -f /tmp/dashboard-clusterrolebinding.yaml
       environment:
-        KUBECONFIG: /home/vagrant/.kube/config
+        KUBECONFIG: "{{ ansible_user_home }}/.kube/config"
 
     # Create Ingress for Dashboard
     - name: Write Dashboard Ingress YAML
@@ -197,31 +194,39 @@
                         number: 443
 
     - name: Wait for Nginx Ingress admission webhook to be ready
-      become_user: vagrant
+      become_user: "{{ kube_user }}"
       ansible.builtin.command: kubectl wait --namespace ingress-nginx --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=120s
       environment:
-        KUBECONFIG: /home/vagrant/.kube/config
+        KUBECONFIG: "{{ ansible_user_home }}/.kube/config"
       register: nginx_wait
       retries: 3
       delay: 10
       until: nginx_wait.rc == 0
 
     - name: Apply Dashboard Ingress
-      become_user: vagrant
+      become_user: "{{ kube_user }}"
       ansible.builtin.command: kubectl apply -f /tmp/dashboard-ingress.yaml
       environment:
-        KUBECONFIG: /home/vagrant/.kube/config
+        KUBECONFIG: "{{ ansible_user_home }}/.kube/config"
 
     # Step 23: Install Istio
-
     - name: Check if Istio folder exists
       ansible.builtin.stat:
         path: /opt/istio-1.28.0
       register: istio_dir
 
+    - name: Detect system architecture
+      ansible.builtin.command: uname -m
+      register: system_arch
+      changed_when: false
+
+    - name: Set Istio architecture
+      ansible.builtin.set_fact:
+        istio_arch: "{{ 'arm64' if system_arch.stdout in ['aarch64', 'arm64'] else 'amd64' }}"
+
     - name: Download Istio 1.28.0
       ansible.builtin.get_url:
-        url: https://github.com/istio/istio/releases/download/1.28.0/istio-1.28.0-linux-amd64.tar.gz
+        url: "https://github.com/istio/istio/releases/download/1.28.0/istio-1.28.0-linux-{{ istio_arch }}.tar.gz"
         dest: /tmp/istio.tar.gz
         mode: '0644'
       when: not istio_dir.stat.exists
@@ -249,10 +254,10 @@
         path: /opt/istio-1.28.0/bin/istioctl
         mode: '0755'
 
-    - name: Add istioctl to PATH for vagrant user
-      become_user: vagrant
+    - name: Add istioctl to PATH for current user
+      become_user: "{{ kube_user }}"
       ansible.builtin.lineinfile:
-        path: /home/vagrant/.bashrc
+        path: "{{ ansible_user_home }}/.bashrc"
         line: 'export PATH=$PATH:/opt/istio-1.28.0/bin'
         create: yes
 
@@ -264,7 +269,7 @@
         force: yes
 
     - name: Create Istio configuration
-      become_user: vagrant
+      become_user: "{{ kube_user }}"
       ansible.builtin.copy:
         content: |
           apiVersion: install.istio.io/v1alpha1
@@ -291,38 +296,38 @@
                   requests:
                     cpu: 50m
                     memory: 128Mi
-        dest: /home/vagrant/istio-config.yaml
+        dest: "{{ ansible_user_home }}/istio-config.yaml"
 
     - name: Check if Istio is already installed
-      become_user: vagrant
+      become_user: "{{ kube_user }}"
       ansible.builtin.shell: kubectl get namespace istio-system 2>/dev/null || echo "not_installed"
       register: istio_check
       environment:
-        KUBECONFIG: /home/vagrant/.kube/config
+        KUBECONFIG: "{{ ansible_user_home }}/.kube/config"
 
     - name: Install Istio
-      become_user: vagrant
-      ansible.builtin.command: /usr/local/bin/istioctl install -y -f /home/vagrant/istio-config.yaml
+      become_user: "{{ kube_user }}"
+      ansible.builtin.command: /usr/local/bin/istioctl install -y -f {{ ansible_user_home }}/istio-config.yaml
       environment:
-        KUBECONFIG: /home/vagrant/.kube/config
+        KUBECONFIG: "{{ ansible_user_home }}/.kube/config"
       when: istio_check.stdout == "not_installed"
     
     # For A3: Install Prometheus Stack
 
     - name: Add Prometheus Helm repository
-      become_user: vagrant
+      become_user: "{{ kube_user }}"
       ansible.builtin.command: helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
       environment:
-        KUBECONFIG: /home/vagrant/.kube/config
+        KUBECONFIG: "{{ ansible_user_home }}/.kube/config"
 
     - name: Update Helm repositories for Prometheus
-      become_user: vagrant
+      become_user: "{{ kube_user }}"
       ansible.builtin.command: helm repo update
       environment:
-        KUBECONFIG: /home/vagrant/.kube/config
+        KUBECONFIG: "{{ ansible_user_home }}/.kube/config"
 
     - name: Install Prometheus Stack
-      become_user: vagrant
+      become_user: "{{ kube_user }}"
       ansible.builtin.command: >
         helm upgrade --install prometheus prometheus-community/kube-prometheus-stack
         --namespace monitoring
@@ -333,13 +338,13 @@
         --set grafana.enabled=true
         --set grafana.adminPassword=admin
       environment:
-        KUBECONFIG: /home/vagrant/.kube/config
+        KUBECONFIG: "{{ ansible_user_home }}/.kube/config"
 
     - name: Wait for Prometheus to be ready
-      become_user: vagrant
+      become_user: "{{ kube_user }}"
       ansible.builtin.command: kubectl wait --namespace monitoring --for=condition=ready pod -l app.kubernetes.io/name=prometheus --timeout=300s
       environment:
-        KUBECONFIG: /home/vagrant/.kube/config
+        KUBECONFIG: "{{ ansible_user_home }}/.kube/config"
       register: prometheus_wait
       retries: 3
       delay: 10
