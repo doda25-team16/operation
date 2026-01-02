@@ -1,23 +1,42 @@
 # Safety check for imbalanced ratios of stable and canary weights.
-{{- $stable := .Values.trafficManagement.splitting.stableWeight}}
-{{- $canary := .Values.trafficManagement.splitting.canaryWeight}}
-{{- $sum := add $stable $canary -}}
+{{- $stable := .Values.trafficManagement.splitting.stableWeight }}
+{{- $canary := .Values.trafficManagement.splitting.canaryWeight }}
+{{- $sum := add $stable $canary }}
 
-{{- if ne $sum 100 -}}
-  {{- fail (printf "Traffic Split Invalid / Imbalance: stableWeight + canaryWeight != 100") -}}
-{{- end}}
+{{- if ne $sum 100 }}
+  {{- fail "Traffic Split Invalid: stableWeight + canaryWeight must equal 100" }}
+{{- end }}
 
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
-metadata: { name: my-entry-service }
+metadata:
+  name: {{ .Values.app.name }}-vs
+  namespace: {{ .Values.namespace }}
 spec:
-  gateways: [ my-gateway ]
-  hosts: [ "*" ]
+  gateways:
+  - {{ .Release.Namespace }}/{{ .Values.istio.gatewayName | default "my-gateway" }}
+  hosts:
+  - "*"
   http:
   - match:
-    - uri: { prefix: / }
+    - headers:
+        x-user:
+          exact: canary
     route:
-    - destination: { host: {{ .Values.app.name }}, subset: latest }
+    - destination:
+        host: {{ .Values.app.name }}
+        subset: canary
+      weight: 100
+
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: {{ .Values.app.name }}
+        subset: stable
       weight: {{ .Values.trafficManagement.splitting.stableWeight }}
-    - destination: { host: {{ .Values.app.name }}, subset: v1 }
+    - destination:
+        host: {{ .Values.app.name }}
+        subset: canary
       weight: {{ .Values.trafficManagement.splitting.canaryWeight }}
