@@ -13,13 +13,13 @@ spec:
     matchLabels:
       app: {{ .Values.model.name }}
       release: {{ .Release.Name }}
-      version: stable
+      version: {{ .Values.model.version | default "stable" }}
   template:
     metadata:
       labels:
         app: {{ .Values.model.name }}
         release: {{ .Release.Name }}
-        version: stable
+        version: {{ .Values.model.version | default "stable" }}
     spec:
       containers:
       - name: {{ .Values.model.name }}

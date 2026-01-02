@@ -40,3 +40,4 @@ Thumbs.db
 tmp/
 temp/
 *.tmp
+istio-1.28.1/

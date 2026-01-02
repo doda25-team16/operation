@@ -13,13 +13,13 @@ spec:
     matchLabels:
       app: {{ .Values.model.name }}
       release: {{ .Release.Name }}
-      version: canary
+      version: {{ .Values.model.canaryVersion | default "canary" }}
   template:
     metadata:
       labels:
         app: {{ .Values.model.name }}
         release: {{ .Release.Name }}
-        version: canary
+        version: {{ .Values.model.canaryVersion | default "canary" }}
     spec:
       containers:
       - name: {{ .Values.model.name }}
@@ -32,9 +32,9 @@ spec:
         env:
           - name: MODEL_PORT
             value: {{ .Values.model.env.modelPort | quote }}
+          - name: EXPERIMENT_VARIANT
+            value: "canary"
         {{- if .Values.resources }}
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
         {{- end }}
-          - name: EXPERIMENT_VARIANT
-            value: canary

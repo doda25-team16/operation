@@ -13,27 +13,18 @@ spec:
     matchLabels:
       app: {{ .Values.app.name }}
       release: {{ .Release.Name }}
-      version: stable
+      version: {{ .Values.app.version | default "stable" }}
   template:
     metadata:
       labels:
         app: {{ .Values.app.name }}
         release: {{ .Release.Name }}
-        version: stable
+        version: {{ .Values.app.version | default "stable" }}
     spec:
-      volumes:
-        - name: shared-volume
-          hostPath:
-            path: /mnt/shared
-            type: Directory
       containers:
       - name: {{ .Values.app.name }}
         image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}"
         imagePullPolicy: {{ .Values.app.image.pullPolicy }}
-        volumeMounts:
-          - name: shared-volume
-            mountPath: /app/shared
-
         ports:
           - name: http
             containerPort: {{ .Values.app.service.targetPort }}
@@ -44,11 +35,11 @@ spec:
               configMapKeyRef:
                 name: {{ .Values.app.name }}-config
                 key: SERVER_PORT
+
+          # ✅ Stable app ALWAYS calls stable model
           - name: MODEL_SERVICE_URL
-            valueFrom:
-              configMapKeyRef:
-                name: {{ .Values.app.name }}-config
-                key: MODEL_SERVICE_URL
+            value: "http://{{ .Values.model.name }}-stable:{{ .Values.model.service.port }}"
+
           - name: SECRET
             valueFrom:
               secretKeyRef:

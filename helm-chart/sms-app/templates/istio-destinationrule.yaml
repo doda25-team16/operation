@@ -2,7 +2,7 @@ apiVersion: networking.istio.io/v1beta1
 kind: DestinationRule
 metadata: { name: {{ .Values.app.name }}-dr}
 spec:
-  host: sms-app
+  host: {{ .Values.app.name }}
   subsets:
   - name: stable
     labels:
@@ -15,7 +15,7 @@ apiVersion: networking.istio.io/v1beta1
 kind: DestinationRule
 metadata: { name: {{ .Values.model.name }}-dr}
 spec:
-  host: sms-model
+  host: {{ .Values.model.name }}
   subsets:
   - name: stable
     labels:
