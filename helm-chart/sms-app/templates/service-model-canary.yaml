@@ -1,17 +1,17 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.model.name }}
+  name: {{ .Values.model.name }}-canary
   namespace: {{ .Values.namespace }}
   labels:
     app: {{ .Values.model.name }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
 spec:
   type: {{ .Values.model.service.type }}
   selector:
     app: {{ .Values.model.name }}
     release: {{ .Release.Name }}
+    version: {{ .Values.model.canaryVersion | default "canary" }}
   ports:
     - name: http
       port: {{ .Values.model.service.port }}
