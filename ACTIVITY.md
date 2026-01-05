@@ -81,4 +81,12 @@ Worked on steps 8, 9 10 and 11 of A2. These envolved ensuring all nodes are reac
 
 - Johnny: https://github.com/doda25-team16/operation/pull/69 Small changes this week, spent a lot of time on debugging why our Helm Installation wasn't working after our latest push to main. Some hard-coded paths were pushed onto main (related to storage). Also made some small tweaks to provisioning and deployments.
 
+- Yuting: https://github.com/doda25-team16/operation/pull/73 I continued with the Grafana Dashboard task this week. This involved creating a dashboard and connect to Prometheus automatically. I spent a lot of time debugging the issues of vagrant provision on my host machine. The nodes couldn't be joined automatically and provision didn't work. After this task, I will continue with improving A3 and A4.
+
 - Caio: https://github.com/doda25-team16/operation/pull/70 This week I read through some of the feedback recieved for assignment 1. I saw that we where missing the .env file for that assignment and I decided to implement it into our project. I also then updated the readme accordingly and was able to get it all working.
+
+- Job: https://github.com/doda25-team16/lib-version/pull/4 and https://github.com/doda25-team16/app/pull/10: This week, I went back to see what we had missed from previous weeks and looked into how we could reuse our lib-version in other parts of our code.
+
+- Uddhav: https://github.com/doda25-team16/operation/pull/68 I reworked on the Traffic Management part of A4 this week so that I can move forward with the Continuous Experimentation part. The TM does work now, but it could still use some changes which i am currently working on now.
+
+- Ignas: https://github.com/doda25-team16/operation/pull/72 This week I implemented Alerting for Assignment 3, which was still missing. This required also some updates to the playbooks to install Prometheus corrctly. I also took the time to make all the Ansible playbooks user independent (where user is a variable), and architecture independent and idempotent. Now it works for both AMD64 and ARM64 architectures, and re-running playbooks does not give errors.
