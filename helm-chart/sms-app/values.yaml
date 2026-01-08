@@ -1,3 +1,4 @@
+# SMS app configuration
 app:
   name: sms-app
   replicaCount: 1
@@ -13,10 +14,10 @@ app:
     serverPort: "8080"
     modelServiceUrl: "http://sms-model:8081"
   secret:
-    mySecret: "YmFy"
+    mySecret: "YmFy"  # base64 encoded "bar"
   version: stable
-  canaryVersion: canary   # 🔧 ADD
-
+  canaryVersion: canary   
+# SMS Model Service Configuration 
 model:
   name: sms-model
   replicaCount: 1
@@ -30,13 +31,15 @@ model:
     targetPort: 8081
   env:
     modelPort: "8081"
-  version: stable         # 🔧 ADD
-  canaryVersion: canary   # 🔧 ADD
-
+  version: stable         
+  canaryVersion: canary   
+# Ingress configuration
 ingress:
   enabled: true
   className: nginx
   annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
   hosts:
     - host: team16-sms.local
       paths:
@@ -45,9 +48,13 @@ ingress:
           serviceName: sms-app
           servicePort: 8080
   tls: []
+  # - secretName: chart-example-tls
+  # hosts:
+  #   - chart-example.local
 
+# Istio Configurations
 istio:
-  gatewayName: my-gateway
+  gatewayName: my-gateway 
 
 trafficManagement:
   splitting:

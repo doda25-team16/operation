@@ -36,7 +36,6 @@ spec:
                 name: {{ .Values.app.name }}-config
                 key: SERVER_PORT
 
-          # ✅ Canary app ALWAYS calls canary model
           - name: MODEL_SERVICE_URL
             value: "http://{{ .Values.model.name }}-canary:{{ .Values.model.service.port }}"
 

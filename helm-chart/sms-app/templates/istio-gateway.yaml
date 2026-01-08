@@ -38,6 +38,7 @@ spec:
             subFilter:
               name: envoy.filters.http.router
     patch:
+      #do this before every request to the gateway
       operation: INSERT_BEFORE
       value:
         name: envoy.filters.http.local_ratelimit
@@ -46,10 +47,12 @@ spec:
           type_url: type.googleapis.com/envoy.extensions.filters.http.local_ratelimit.v3.LocalRateLimit
           value:
             stat_prefix: http_local_rate_limiter
+            # each minute user gets 10 requests, reset every minute
             token_bucket:
               max_tokens: 10
               tokens_per_fill: 10
               fill_interval: 60s
+            # rate limit 100% of the requests for now
             filter_enabled:
               default_value:
                 numerator: 100
