@@ -3,7 +3,7 @@
   vars:
     ssh_public_keys:
       - "{{ playbook_dir }}/ssh_keys/johnylamw.pub" 
-      # TODO add a secondary key
+      - "{{ playbook_dir }}/ssh_keys/CMH12345.pub" 
   tasks:
     - name: Register team SSH public keys for vagrant user
       ansible.builtin.authorized_key:
