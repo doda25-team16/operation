@@ -4,6 +4,12 @@
     kube_user: "vagrant"
     ansible_user_home: "/home/vagrant"
   tasks:
+    # pre-task: ensure required Ansible collections are installed
+    - name: Ensure required Ansible collections are installed (controller)
+      delegate_to: localhost
+      run_once: true
+      ansible.builtin.command: ansible-galaxy collection install -r {{ playbook_dir }}/requirements.yml
+
     # Step 20: Install MetalLB
     - name: Install MetalLB CRDs (#20a)
       become_user: "{{ kube_user }}"
@@ -313,39 +319,33 @@
       when: istio_check.stdout == "not_installed"
     
     # For A3: Install Prometheus Stack
-
-    - name: Add Prometheus Helm repository
+    - name: Ensure Prometheus Helm repository is present
       become_user: "{{ kube_user }}"
-      ansible.builtin.command: helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+      community.kubernetes.helm_repository:
+        name: prometheus-community
+        repo_url: https://prometheus-community.github.io/helm-charts
       environment:
         KUBECONFIG: "{{ ansible_user_home }}/.kube/config"
 
-    - name: Update Helm repositories for Prometheus
+    - name: Install Prometheus Stack (chart)
       become_user: "{{ kube_user }}"
-      ansible.builtin.command: helm repo update
+      community.kubernetes.helm:
+        name: prometheus
+        chart_ref: prometheus-community/kube-prometheus-stack
+        release_namespace: monitoring
+        create_namespace: true
+        values:
+          prometheus:
+            prometheusSpec:
+              serviceMonitorSelectorNilUsesHelmValues: false
+              retention: "7d"
+          alertmanager:
+            enabled: true
+          grafana:
+            enabled: true
+            adminPassword: admin
+        wait: true
+        timeout: 300
+        state: present
       environment:
         KUBECONFIG: "{{ ansible_user_home }}/.kube/config"
-
-    - name: Install Prometheus Stack
-      become_user: "{{ kube_user }}"
-      ansible.builtin.command: >
-        helm upgrade --install prometheus prometheus-community/kube-prometheus-stack
-        --namespace monitoring
-        --create-namespace
-        --set prometheus.prometheusSpec.serviceMonitorSelectorNilUsesHelmValues=false
-        --set prometheus.prometheusSpec.retention=7d
-        --set alertmanager.enabled=true
-        --set grafana.enabled=true
-        --set grafana.adminPassword=admin
-      environment:
-        KUBECONFIG: "{{ ansible_user_home }}/.kube/config"
-
-    - name: Wait for Prometheus to be ready
-      become_user: "{{ kube_user }}"
-      ansible.builtin.command: kubectl wait --namespace monitoring --for=condition=ready pod -l app.kubernetes.io/name=prometheus --timeout=300s
-      environment:
-        KUBECONFIG: "{{ ansible_user_home }}/.kube/config"
-      register: prometheus_wait
-      retries: 3
-      delay: 10
-      until: prometheus_wait.rc == 0
