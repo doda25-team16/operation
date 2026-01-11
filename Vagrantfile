@@ -50,6 +50,11 @@ Vagrant.configure("2") do |config|
       # Generate a reusable Ansible inventory with all active nodes
       ctrl_ansible.inventory_path = "ansible/inventory.cfg"
       ctrl_ansible.host_key_checking = false
+      # Add groups so the generated inventory has [control] and [node]
+      ctrl_ansible.groups = {
+        "control" => ["ctrl"],
+        "node" => hosts_list.select { |h| h["VM_name"] != "ctrl" }.map { |h| h["VM_name"] }
+      }
       ctrl_ansible.extra_vars = { hosts_list: hosts_list }
     end
 
