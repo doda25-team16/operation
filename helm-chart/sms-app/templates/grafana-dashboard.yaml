@@ -165,7 +165,7 @@ data:
             {
               "editorMode": "builder",
               "expr": "sum(total_requests) by (result)",
-              "legendFormat": "{{result}}",
+              "legendFormat": "{{ "{{" }}result}}",
               "range": true,
               "refId": "A"
             }
@@ -266,7 +266,7 @@ data:
               "exemplar": false,
               "expr": "rate(total_requests[1m])",
               "instant": false,
-              "legendFormat": "{{result}}",
+              "legendFormat": "{{ "{{" }}result}}",
               "range": true,
               "refId": "A"
             }
