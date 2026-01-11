@@ -47,10 +47,13 @@ Vagrant.configure("2") do |config|
     ctrl.vm.provision :ansible do |ctrl_ansible|
       ctrl_ansible.compatibility_mode = "2.0"
       ctrl_ansible.playbook = "ansible/general.yaml"
+      # Generate a reusable Ansible inventory with all active nodes
+      ctrl_ansible.inventory_path = "ansible/inventory.cfg"
+      ctrl_ansible.host_key_checking = false
       ctrl_ansible.extra_vars = { hosts_list: hosts_list }
     end
 
-    # Install Ansible inside the control node so we can manually run playbooks if needed
+    # Install Ansible inside only the control node for extra options
     ctrl.vm.provision "shell", inline: <<-SHELL
       sudo apt-get update -y
       sudo apt-get install -y software-properties-common
@@ -82,14 +85,6 @@ Vagrant.configure("2") do |config|
         node_ansible.playbook = "ansible/general.yaml"
         node_ansible.extra_vars = { hosts_list: hosts_list }
       end
-
-      # Install Ansible inside the worker node so we can manually run playbooks if needed
-      node.vm.provision "shell", inline: <<-SHELL
-        sudo apt-get update -y
-        sudo apt-get install -y software-properties-common
-        sudo add-apt-repository --yes --update ppa:ansible/ansible
-        sudo apt-get install -y ansible
-      SHELL
 
       # Worker Node specific playbook
       node.vm.provision :ansible do |node_ansible|

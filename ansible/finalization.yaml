@@ -346,7 +346,7 @@
             enabled: true
             adminPassword: admin
         wait: true
-        timeout: 300
+        timeout: 300s
         state: present
       environment:
         KUBECONFIG: "{{ ansible_user_home }}/.kube/config"
