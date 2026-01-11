@@ -1,4 +1,4 @@
-- hosts: all
+- hosts: control
   become: yes
   vars:
     kube_user: "vagrant"
@@ -8,6 +8,7 @@
     - name: Ensure required Ansible collections are installed (controller)
       delegate_to: localhost
       run_once: true
+      become: no
       ansible.builtin.command: ansible-galaxy collection install -r {{ playbook_dir }}/requirements.yml
 
     # Step 20: Install MetalLB
