@@ -99,4 +99,7 @@ Worked on steps 8, 9 10 and 11 of A2. These envolved ensuring all nodes are reac
 
 - Ignas: https://github.com/doda25-team16/operation/pull/89 This week I fixed multiple issues in our cluster provisioning. I replaced inline shell scripts with helm modules where possible, fixed running playbooks on the ctrl node, fixed the IP range and some other idempotancy improvements.
 
-- Johnny: https://github.com/doda25-team16/operation/pull/92 I extended upon our pre-existing rate-limiting implementation and brought it up to Excellent from Good by implementing a Global rate-limiting and also a user-based rate limiting based on per-user headers. 
+- Johnny: https://github.com/doda25-team16/operation/pull/92 I extended upon our pre-existing rate-limiting implementation and brought it up to Excellent from Good by implementing a Global rate-limiting and also a user-based rate limiting based on per-user headers.
+
+- Job: https://github.com/doda25-team16/app/pull/12 I updated the version on the app repo to bump up the grade after testing, the lib-version.
+
