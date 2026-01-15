@@ -102,4 +102,5 @@ Worked on steps 8, 9 10 and 11 of A2. These envolved ensuring all nodes are reac
 - Johnny: https://github.com/doda25-team16/operation/pull/92 I extended upon our pre-existing rate-limiting implementation and brought it up to Excellent from Good by implementing a Global rate-limiting and also a user-based rate limiting based on per-user headers.
 
 - Job: https://github.com/doda25-team16/app/pull/12 I updated the version on the app repo to bump up the grade after testing, the lib-version.
-
+- Uddhav: https://github.com/doda25-team16/app/pull/11 For the continuous experimentation part I made a second version of the app(made a minimal UI change (button color to yellow)) to create a new application version. The change is intentionally small to isolate its impact during canary deployment.
+  https://github.com/doda25-team16/operation/pull/74 After facing a lot of errors and bugs in the Traffic Management part, I was able to fix it, and I also added Sticky Sessions so my continuous experimentation part goes smoothly. (Note: this PR was made during the break but since the activity.md file goes from Dec 15+ to Jan 5+, so I am pasting that week's contribution here)
