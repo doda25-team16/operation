@@ -1,9 +1,4 @@
-# Default values for sms-app Helm chart
-
-# Global settings
-namespace: default
-
-# SMS App configuration
+# SMS app configuration
 app:
   name: sms-app
   replicaCount: 1
@@ -20,8 +15,9 @@ app:
     modelServiceUrl: "http://sms-model:8081"
   secret:
     mySecret: "YmFy"  # base64 encoded "bar"
-
-# SMS Model Service configuration
+  version: stable
+  canaryVersion: canary   
+# SMS Model Service Configuration 
 model:
   name: sms-model
   replicaCount: 1
@@ -35,7 +31,8 @@ model:
     targetPort: 8081
   env:
     modelPort: "8081"
-
+  version: stable         
+  canaryVersion: canary   
 # Ingress configuration
 ingress:
   enabled: true
@@ -51,29 +48,15 @@ ingress:
           serviceName: sms-app
           servicePort: 8080
   tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
-
-# Resource limits (optional, can be uncommented for production)
-resources: {}
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+  # - secretName: chart-example-tls
+  # hosts:
+  #   - chart-example.local
 
 # Istio Configurations
 istio:
-  gatewaySelector:
-    istio_name_label: ingressgateway # name of the ingress selector
+  gatewayName: my-gateway 
 
 trafficManagement:
-  rateLimit:
-    requestsPerMinute: 10
-    enabled: true
-
   splitting:
-    stableWeight: 90 
+    stableWeight: 90
     canaryWeight: 10

@@ -1,16 +1,23 @@
 # 1. Basic Istio setup for traffic management
 apiVersion: networking.istio.io/v1beta1
 kind: Gateway
-metadata: { name: my-gateway }
+metadata:
+  name: my-gateway
+  namespace: {{ .Release.namespace }}
 spec:
-  selector: {{ .Values.istio.gatewaySelector | toYaml | nindent 4 }} # Indent determines current file structure level
+  selector:
+    istio: ingressgateway
   servers:
-  - port: { number: 80, name: http, protocol: HTTP }
-    hosts: [ "*" ]
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"
 
 ---
 
-# 2. Additional Use Case:Request rate limit
+# 2. Additional Use Case: Request rate limit (applies ONLY to ingress gateway)
 apiVersion: networking.istio.io/v1alpha3
 kind: EnvoyFilter
 metadata:
@@ -18,7 +25,8 @@ metadata:
   namespace: istio-system
 spec:
   workloadSelector:
-    labels: {{ .Values.istio.gatewaySelector | toYaml | nindent 6 }}
+    labels:
+      istio: ingressgateway
   configPatches:
   - applyTo: HTTP_FILTER
     match:
@@ -30,12 +38,12 @@ spec:
             subFilter:
               name: envoy.filters.http.router
     patch:
-      # do this before every request to the gateway
+      #do this before every request to the gateway
       operation: INSERT_BEFORE
       value:
         name: envoy.filters.http.local_ratelimit
         typed_config:
-          '@type': type.googleapis.com/udpa.type.v1.TypedStruct
+          "@type": type.googleapis.com/udpa.type.v1.TypedStruct
           type_url: type.googleapis.com/envoy.extensions.filters.http.local_ratelimit.v3.LocalRateLimit
           value:
             stat_prefix: http_local_rate_limiter
@@ -44,7 +52,7 @@ spec:
               max_tokens: 10
               tokens_per_fill: 10
               fill_interval: 60s
-            # rate limit 100% of requests for now
+            # rate limit 100% of the requests for now
             filter_enabled:
               default_value:
                 numerator: 100
