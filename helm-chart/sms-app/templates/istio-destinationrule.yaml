@@ -1,21 +1,23 @@
 apiVersion: networking.istio.io/v1beta1
 kind: DestinationRule
-metadata: { name: {{ .Values.app.name }}-dr}
+metadata:
+  name: {{ .Values.app.name }}-dr
 spec:
   host: {{ .Values.app.name }}
   subsets:
-  - name: latest
-    labels: { version: latest }
-  - name: v1
-    labels: { version: v1 }
+  - name: stable
+    labels: { version: stable }
+  - name: canary
+    labels: { version: canary }
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: DestinationRule
-metadata: { name: {{ .Values.model.name }}-dr}
+metadata:
+  name: {{ .Values.model.name }}-dr
 spec:
   host: {{ .Values.model.name }}
   subsets:
-  - name: latest
-    labels: { version: latest }
-  - name: v1
-    labels: { version: v1 }
+  - name: stable
+    labels: { version: stable }
+  - name: canary
+    labels: { version: canary }

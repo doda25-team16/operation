@@ -2,8 +2,8 @@
 apiVersion: networking.istio.io/v1beta1
 kind: Gateway
 metadata:
-  name: my-gateway
-  namespace: {{ .Release.namespace }}
+  name: {{ .Values.istio.gatewayName | default "my-gateway" | quote }}
+  namespace: {{ .Release.Namespace }}
 spec:
   selector:
     istio: ingressgateway
@@ -49,8 +49,8 @@ spec:
             stat_prefix: http_local_rate_limiter
             # each minute user gets 10 requests, reset every minute
             token_bucket:
-              max_tokens: 10
-              tokens_per_fill: 10
+              max_tokens: {{ .Values.trafficManagement.rateLimit.requestsPerMinute }}
+              tokens_per_fill: {{ .Values.trafficManagement.rateLimit.requestsPerMinute }}
               fill_interval: 60s
             # rate limit 100% of the requests for now
             filter_enabled:

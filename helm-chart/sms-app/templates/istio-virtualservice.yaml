@@ -17,6 +17,14 @@ spec:
   - {{ .Release.Namespace }}/{{ .Values.istio.gatewayName | default "my-gateway" }}
   hosts:
   - "*"
+  name: {{ .Values.istio.entryVirtualServiceName | default "my-entry-service" | quote }}
+spec:
+  gateways:
+    - {{ .Values.istio.gatewayName | default "my-gateway" | quote }}
+  hosts:
+{{- range (.Values.istio.entryHosts | default (list "*")) }}
+    - {{ . | quote }}
+{{- end }}
   http:
   - match:
     - headers:
@@ -39,4 +47,8 @@ spec:
     - destination:
         host: {{ .Values.app.name }}
         subset: canary
+      weight: {{ .Values.trafficManagement.splitting.canaryWeight }}
+    - destination: { host: {{ .Values.app.name }}, subset: stable }
+      weight: {{ .Values.trafficManagement.splitting.stableWeight }}
+    - destination: { host: {{ .Values.app.name }}, subset: canary }
       weight: {{ .Values.trafficManagement.splitting.canaryWeight }}

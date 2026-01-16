@@ -4,7 +4,8 @@ app:
   replicaCount: 1
   image:
     repository: ghcr.io/doda25-team16/app
-    tag: latest
+    stableTag: v0.0.3
+    canaryTag: v0.0.4
     pullPolicy: Always
   service:
     type: ClusterIP
@@ -23,7 +24,8 @@ model:
   replicaCount: 1
   image:
     repository: ghcr.io/doda25-team16/model-service
-    tag: latest
+    stableTag: latest
+    canaryTag: latest
     pullPolicy: Always
   service:
     type: ClusterIP
@@ -54,9 +56,18 @@ ingress:
 
 # Istio Configurations
 istio:
-  gatewayName: my-gateway 
+  gatewaySelector:
+    istio_name_label: ingressgateway # ingress selector name
+  gatewayName: my-gateway
+  entryVirtualServiceName: my-entry-service
+  entryHosts:
+    - "*"
 
 trafficManagement:
+  rateLimit:
+    enabled: true
+    requestsPerMinute: 10
+
   splitting:
     stableWeight: 90
     canaryWeight: 10

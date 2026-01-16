@@ -1,0 +1,29 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: {{ .Values.model.name }}-vs
+spec:
+  hosts:
+  - {{ .Values.model.name }}
+  http:
+  - match:
+    - sourceLabels:
+        app: {{ .Values.app.name }}
+        version: stable
+    route:
+    - destination:
+        host: {{ .Values.model.name }}
+        subset: stable
+  - match:
+    - sourceLabels:
+        app: {{ .Values.app.name }}
+        version: canary
+    route:
+    - destination:
+        host: {{ .Values.model.name }}
+        subset: canary
+  # fallback (if anything else calls the model)
+  - route:
+    - destination:
+        host: {{ .Values.model.name }}
+        subset: stable
