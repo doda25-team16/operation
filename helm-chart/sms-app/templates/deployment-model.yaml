@@ -1,38 +1,48 @@
+{{- $modelName := .Values.model.name -}}
+{{- $ns := .Values.namespace -}}
+{{- $rel := .Release.Name -}}
+
+{{- range $v := list "stable" "canary" }}
+{{- $tag := ternary $.Values.model.image.stableTag $.Values.model.image.canaryTag (eq $v "stable") }}
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.model.name }}
-  namespace: {{ .Values.namespace }}
+  name: {{ $modelName }}-{{ $v }}
+  namespace: {{ $ns }}
   labels:
-    app: {{ .Values.model.name }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
+    app: {{ $modelName }}
+    release: {{ $rel }}
+    version: {{ $v }}
 spec:
-  replicas: {{ .Values.model.replicaCount }}
+  replicas: {{ $.Values.model.replicaCount }}
   selector:
     matchLabels:
-      app: {{ .Values.model.name }}
-      release: {{ .Release.Name }}
-      version: {{ .Values.model.version | default "stable" }}
+      app: {{ $modelName }}
+      release: {{ $rel }}
+      version: {{ $v }}
   template:
     metadata:
       labels:
-        app: {{ .Values.model.name }}
-        release: {{ .Release.Name }}
-        version: {{ .Values.model.version | default "stable" }}
+        app: {{ $modelName }}
+        release: {{ $rel }}
+        version: {{ $v }}
     spec:
       containers:
-      - name: {{ .Values.model.name }}
-        image: "{{ .Values.model.image.repository }}:{{ .Values.model.image.tag }}"
-        imagePullPolicy: {{ .Values.model.image.pullPolicy }}
+      - name: {{ $modelName }}
+        image: "{{ $.Values.model.image.repository }}:{{ $tag }}"
+        imagePullPolicy: {{ $.Values.model.image.pullPolicy }}
+
         ports:
           - name: http
-            containerPort: {{ .Values.model.service.targetPort }}
+            containerPort: {{ $.Values.model.service.targetPort }}
             protocol: TCP
         env:
           - name: MODEL_PORT
-            value: {{ .Values.model.env.modelPort | quote }}
-        {{- if .Values.resources }}
+            value: {{ $.Values.model.env.modelPort | quote }}
+        {{- if $.Values.resources }}
         resources:
-          {{- toYaml .Values.resources | nindent 10 }}
+          {{- toYaml $.Values.resources | nindent 10 }}
         {{- end }}
+---
+{{- end }}

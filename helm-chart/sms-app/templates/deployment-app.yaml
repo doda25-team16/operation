@@ -1,50 +1,62 @@
+{{- $appName := .Values.app.name -}}
+{{- $ns := .Values.namespace -}}
+{{- $rel := .Release.Name -}}
+
+{{- range $v := list "stable" "canary" }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.app.name }}
-  namespace: {{ .Values.namespace }}
+  name: {{ $appName }}-{{ $v }}
+  namespace: {{ $ns }}
   labels:
-    app: {{ .Values.app.name }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
+    app: {{ $appName }}
+    release: {{ $rel }}
+    version: {{ $v }}
 spec:
-  replicas: {{ .Values.app.replicaCount }}
+  replicas: {{ $.Values.app.replicaCount }}
   selector:
     matchLabels:
-      app: {{ .Values.app.name }}
-      release: {{ .Release.Name }}
-      version: {{ .Values.app.version | default "stable" }}
+      app: {{ $appName }}
+      release: {{ $rel }}
+      version: {{ $v }}
   template:
     metadata:
       labels:
-        app: {{ .Values.app.name }}
-        release: {{ .Release.Name }}
-        version: {{ .Values.app.version | default "stable" }}
+        app: {{ $appName }}
+        release: {{ $rel }}
+        version: {{ $v }}
     spec:
       containers:
-      - name: {{ .Values.app.name }}
-        image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}"
-        imagePullPolicy: {{ .Values.app.image.pullPolicy }}
+      - name: {{ $appName }}
+        image: "{{ $.Values.app.image.repository }}:{{ ternary $.Values.app.image.stableTag $.Values.app.image.canaryTag (eq $v "stable") }}"
+        imagePullPolicy: {{ $.Values.app.image.pullPolicy }}
+        volumeMounts:
+          - name: shared-volume
+            mountPath: /app/shared
         ports:
           - name: http
-            containerPort: {{ .Values.app.service.targetPort }}
+            containerPort: {{ $.Values.app.service.targetPort }}
             protocol: TCP
         env:
           - name: SERVER_PORT
             valueFrom:
               configMapKeyRef:
-                name: {{ .Values.app.name }}-config
+                name: {{ $appName }}-config
                 key: SERVER_PORT
 
           - name: MODEL_SERVICE_URL
-            value: "http://{{ .Values.model.name }}-stable:{{ .Values.model.service.port }}"
-
+            valueFrom:
+              configMapKeyRef:
+                name: {{ $appName }}-config
+                key: MODEL_SERVICE_URL
           - name: SECRET
             valueFrom:
               secretKeyRef:
-                name: {{ .Values.app.name }}-secret
+                name: {{ $appName }}-secret
                 key: MY_SECRET
-        {{- if .Values.resources }}
+        {{- if $.Values.resources }}
         resources:
-          {{- toYaml .Values.resources | nindent 10 }}
+          {{- toYaml $.Values.resources | nindent 10 }}
         {{- end }}
+---
+{{- end }}
