@@ -48,7 +48,3 @@ spec:
         host: {{ .Values.app.name }}
         subset: canary
       weight: {{ .Values.trafficManagement.splitting.canaryWeight }}
-    - destination: { host: {{ .Values.app.name }}, subset: stable }
-      weight: {{ .Values.trafficManagement.splitting.stableWeight }}
-    - destination: { host: {{ .Values.app.name }}, subset: canary }
-      weight: {{ .Values.trafficManagement.splitting.canaryWeight }}
