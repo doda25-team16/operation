@@ -26,6 +26,9 @@ spec:
         release: {{ $rel }}
         version: {{ $v }}
     spec:
+      volumes:
+        - name: shared-volume
+          emptyDir: {}
       containers:
       - name: {{ $appName }}
         image: "{{ $.Values.app.image.repository }}:{{ ternary $.Values.app.image.stableTag $.Values.app.image.canaryTag (eq $v "stable") }}"
