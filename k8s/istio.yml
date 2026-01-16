@@ -69,23 +69,51 @@ spec:
       # do this before every request to the gateway
       operation: INSERT_BEFORE
       value:
-        name: envoy.filters.http.local_ratelimit
+        name: envoy.filters.http.ratelimit
         typed_config:
-          '@type': type.googleapis.com/udpa.type.v1.TypedStruct
-          type_url: type.googleapis.com/envoy.extensions.filters.http.local_ratelimit.v3.LocalRateLimit
-          value:
-            stat_prefix: http_local_rate_limiter
-            # each minute user gets 10 requests, reset every minute
-            token_bucket:
-              max_tokens: 10
-              tokens_per_fill: 10
-              fill_interval: 60s
-            # rate limit 100% of requests for now
-            filter_enabled:
-              default_value:
-                numerator: 100
-                denominator: HUNDRED
-            filter_enforced:
-              default_value:
-                numerator: 100
-                denominator: HUNDRED
+          "@type": type.googleapis.com/envoy.extensions.filters.http.ratelimit.v3.RateLimit
+          domain: ratelimit
+          failure_mode_deny: true
+          timeout: 10s
+          rate_limit_service:
+            grpc_service:
+              envoy_grpc:
+                cluster_name: outbound|8081||ratelimit.istio-system.svc.cluster.local
+                authority: ratelimit.istio-system.svc.cluster.local
+            transport_api_version: V3
+  - applyTo: VIRTUAL_HOST
+    match:
+      context: GATEWAY
+      routeConfiguration:
+        vhost:
+          name: ""
+          route:
+            action: ANY
+    patch:
+      operation: MERGE
+      # Rate Limit Rules
+      value:
+        rate_limits:
+          - actions:
+            - request_headers:
+                header_name: "X-Access-User"
+                descriptor_key: "user"
+          - actions:
+            - generic_key:
+                descriptor_value: "all"
+          # value:
+          #   stat_prefix: http_local_rate_limiter
+          #   # each minute user gets 10 requests, reset every minute
+          #   token_bucket:
+          #     max_tokens: 10
+          #     tokens_per_fill: 10
+          #     fill_interval: 60s
+          #   # rate limit 100% of requests for now
+          #   filter_enabled:
+          #     default_value:
+          #       numerator: 100
+          #       denominator: HUNDRED
+          #   filter_enforced:
+          #     default_value:
+          #       numerator: 100
+          #       denominator: HUNDRED
