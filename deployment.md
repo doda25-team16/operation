@@ -112,6 +112,20 @@ To modify the split (e.g., to 90/10), edit the weights in `k8s/istio.yml` and re
 
 This command installs the entire application stack using the chart located in `helm-chart/sms-app`.
 
+In accordance to the rubric for A3, we want a pre-deployed secret:
+```bash
+kubectl -n default create secret generic sms-app-secret \
+  --from-literal=MY_SECRET=YmFy
+```
+
+Install helm sms-app with the secret reference:
+```bash
+helm upgrade --install sms-app ./helm-chart/sms-app \
+  -n default \
+  --set app.secret.secretName=sms-app-secret
+```
+---
+Normally:
 ```bash
 helm install sms-app ./helm-chart/sms-app
 ```
