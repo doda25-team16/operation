@@ -15,9 +15,9 @@ end
 Vagrant.configure("2") do |config|
   hosts_list = []
 
-  hosts_list << {"VM_name" => "ctrl", "ip" => "192.168.56.110"}
+  hosts_list << {"VM_name" => "ctrl", "ip" => "192.168.56.100"}
   (1..NUMBER_OF_WORKERS).each do |i|
-    hosts_list << {"VM_name" => "node-#{i}", "ip" => "192.168.56.#{110 + i}"}
+    hosts_list << {"VM_name" => "node-#{i}", "ip" => "192.168.56.#{100 + i}"}
   end
 
   # Default Nodes
@@ -36,7 +36,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "ctrl" do |ctrl|
     ctrl.vm.hostname = "ctrl"
     # "host-only" interface (NIC)
-    ctrl.vm.network "private_network", ip: "192.168.56.110"
+    ctrl.vm.network "private_network", ip: "192.168.56.100"
     
     ctrl.vm.provider "virtualbox" do |wvb| # wvb = worker virtual box
       wvb.memory = 4096
@@ -47,10 +47,18 @@ Vagrant.configure("2") do |config|
     ctrl.vm.provision :ansible do |ctrl_ansible|
       ctrl_ansible.compatibility_mode = "2.0"
       ctrl_ansible.playbook = "ansible/general.yaml"
+      # Generate a reusable Ansible inventory with all active nodes
+      ctrl_ansible.inventory_path = "ansible/inventory.cfg"
+      ctrl_ansible.host_key_checking = false
+      # Add groups so the generated inventory has [control] and [node]
+      ctrl_ansible.groups = {
+        "control" => ["ctrl"],
+        "node" => hosts_list.select { |h| h["VM_name"] != "ctrl" }.map { |h| h["VM_name"] }
+      }
       ctrl_ansible.extra_vars = { hosts_list: hosts_list }
     end
 
-    # Install Ansible inside the control node so we can manually run playbooks if needed
+    # Install Ansible inside only the control node for extra options
     ctrl.vm.provision "shell", inline: <<-SHELL
       sudo apt-get update -y
       sudo apt-get install -y software-properties-common
@@ -70,7 +78,7 @@ Vagrant.configure("2") do |config|
     config.vm.define "node-#{i}" do |node|
       node.vm.hostname = "node-#{i}"
       # "host-only" interface (NIC)
-      node.vm.network "private_network", ip: "192.168.56.#{110 + i}" # ip is indexed by worker#
+      node.vm.network "private_network", ip: "192.168.56.#{100 + i}" # ip is indexed by worker#
       
       node.vm.provider "virtualbox" do |nvb| # nvb = worker virtual box
         nvb.memory = 6144
@@ -82,14 +90,6 @@ Vagrant.configure("2") do |config|
         node_ansible.playbook = "ansible/general.yaml"
         node_ansible.extra_vars = { hosts_list: hosts_list }
       end
-
-      # Install Ansible inside the worker node so we can manually run playbooks if needed
-      node.vm.provision "shell", inline: <<-SHELL
-        sudo apt-get update -y
-        sudo apt-get install -y software-properties-common
-        sudo add-apt-repository --yes --update ppa:ansible/ansible
-        sudo apt-get install -y ansible
-      SHELL
 
       # Worker Node specific playbook
       node.vm.provision :ansible do |node_ansible|

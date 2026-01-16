@@ -63,16 +63,59 @@
         src: templates/hosts.j2
         dest: /etc/hosts
 
+    - name: Ensure curl and gpg are installed (prereq for Kubernetes repo) (#9)
+      ansible.builtin.apt:
+        pkg:
+          - curl
+          - gnupg
+          - ca-certificates
+        state: present
+        update_cache: yes
+
+    - name: Check DNS resolution for pkgs.k8s.io (#9)
+      ansible.builtin.command: getent hosts pkgs.k8s.io
+      register: dns_check
+      ignore_errors: yes
+
+    - name: Configure fallback DNS via systemd-resolved drop-in (#9)
+      ansible.builtin.copy:
+        dest: /etc/systemd/resolved.conf.d/fallback-dns.conf
+        content: |
+          [Resolve]
+          DNS=1.1.1.1 8.8.8.8
+          FallbackDNS=9.9.9.9 208.67.222.222
+        mode: '0644'
+      when: dns_check.rc != 0
+
+    - name: Restart systemd-resolved to apply DNS changes (#9)
+      ansible.builtin.systemd:
+        name: systemd-resolved
+        state: restarted
+      when: dns_check.rc != 0
+
+    - name: Ensure /etc/apt/keyrings exists (#9)
+      ansible.builtin.file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: '0755'
+
     - name: Get Kubernetes key and dearmor it (#9)
       ansible.builtin.shell: |
-        curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.32/deb/Release.key \
-        | gpg --dearmor -o /etc/apt/keyrings/kubernetes.gpg
+        curl -fsSL --retry 5 --retry-delay 2 https://pkgs.k8s.io/core:/stable:/v1.32/deb/Release.key -o /tmp/kubernetes-release.key
+        gpg --dearmor --yes -o /etc/apt/keyrings/kubernetes-archive-keyring.gpg /tmp/kubernetes-release.key
+        chown root:root /etc/apt/keyrings/kubernetes-archive-keyring.gpg
+        chmod 0644 /etc/apt/keyrings/kubernetes-archive-keyring.gpg
       args:
-        creates: /etc/apt/keyrings/kubernetes.gpg
+        creates: /etc/apt/keyrings/kubernetes-archive-keyring.gpg
+
+    - name: Remove legacy Kubernetes repo if present (#9)
+      ansible.builtin.file:
+        path: /etc/apt/sources.list.d/kubernetes.list
+        state: absent
 
     - name: Add Kubernetes repo (#9)
       apt_repository:
-        repo: deb [signed-by=/etc/apt/keyrings/kubernetes.gpg] https://pkgs.k8s.io/core:/stable:/v1.32/deb/ /
+        repo: "deb [signed-by=/etc/apt/keyrings/kubernetes-archive-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.32/deb/ /"
         state: present
         filename: kubernetes
 
