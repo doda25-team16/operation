@@ -64,6 +64,10 @@ istio:
     - "*"
 
 trafficManagement:
+  rateLimit:
+    enabled: true
+    requestsPerMinute: 10
+
   splitting:
     stableWeight: 90
     canaryWeight: 10
