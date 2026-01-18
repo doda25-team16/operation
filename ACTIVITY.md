@@ -115,4 +115,4 @@ Worked on steps 8, 9 10 and 11 of A2. These envolved ensuring all nodes are reac
 
 - Yuting: https://github.com/doda25-team16/operation/pull/96 Added a second Grafana Dashboard to monitor the differences between versions in the A4 Continuous Experimentation. Enable automatic loading the dashboards by Helm. Fix a small bug causing vagrant control to fail applying finalization.yaml.
 
-- Ignas: https://github.com/doda25-team16/operation/pull/97 Rewrote and added to our README.md to include all k8s cluster deployment steps and verifications.
+- Ignas: https://github.com/doda25-team16/operation/pull/97 Started from a clean VM and went through all the provisioning and deployment steps to create a fresh new README.md and confirm everything works. Our old README had not been updated since week 4.
