@@ -99,12 +99,14 @@ At this point the following is provisioned, and the cluster is ready for deploym
 #### Application deployment
 
 **Method A: Helm Chart (recommended)**
-Use Helm to manage the deployment, and not apply all manifests manually:
+Use Helm to manage the deployment:
 ```bash
 # SSH into the ctrl node and run it from there
 vagrant ssh ctrl
 helm install sms-app vagrant/helm-chart/sms-app
-
+```
+further commands if needed:
+```bash
 # or with kubectl configured locally (note that now you dont need the vagrant dir)
 helm install sms-app ./helm-chart/sms-app
 
@@ -117,10 +119,14 @@ helm rollback sms-app 1
 # Uninstall
 helm uninstall sms-app
 ```
+Then add our url to the hosts file:
+```bash
+echo "192.168.56.90 team16-sms.local" | sudo tee -a /etc/hosts
+```
 
 Check [helm-chart/sms-app/README.md](helm-chart/sms-app/README.md) for detailed information about the helm chart config.
 
-**Method B: kubectl manifests (manual)**
+**Method B: kubectl manifests (manual, not recommended)**
 Deploy all k8s manifests manually using `kubectl`:
 ```bash
 kubectl apply -f k8s/configmap.yml
@@ -136,9 +142,17 @@ kubectl apply -f k8s/prometheus-rules.yml
 kubectl apply -f k8s/alertmanager.yml
 ```
 
+Then add our url to the known hosts file:
+```bash
+echo "192.168.56.90 team16-sms.local" | sudo tee -a /etc/hosts
+```
+
 *Important: if you are switching between Helm deployments and manual manifest deployments, make sure to clean up the whole application. `helm uninstall sms-app` should do the trick, otherwise manually apply `kubectl delete` all resources.*
 
 #### Accessing the application
+Acces the app via http://team16-sms.local/sms/
+
+#### Debugging and verifying
 **Nginx Ingress**
 Main entry point for web app:
 http://192.168.56.90
@@ -147,7 +161,6 @@ http://192.168.56.90
 Alternative entry with service mesh features, includes A/B testing:
 http://192.168.56.91
 
-#### Debugging and verifying
 **Direct Service Access (for debugging):**
 ```bash
 # Port-forward to services from ctrl node
