@@ -111,3 +111,4 @@ Worked on steps 8, 9 10 and 11 of A2. These envolved ensuring all nodes are reac
 
 - Johnny: https://github.com/doda25-team16/operation/pull/94. Looked over two PRs this week and implemented documentation and logic for pre-deployed secrets since our pre-existing logic was pre-defined and graded "poor" on the rubric.
 - Uddhav: https://github.com/doda25-team16/operation/pull/93 Completed the continuous experimentation part this week. Implemented 90/10 traffic split via Istio VirtualService
+- Yuting: https://github.com/doda25-team16/operation/pull/96 Added a second Grafana Dashboard to monitor the differences between versions in the A4 Continuous Experimentation. Enable automatic loading the dashboards by Helm. Fix a small bug causing vagrant control to fail applying finalization.yaml.
