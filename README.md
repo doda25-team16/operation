@@ -150,15 +150,15 @@ echo "192.168.56.90 team16-sms.local" | sudo tee -a /etc/hosts
 *Important: if you are switching between Helm deployments and manual manifest deployments, make sure to clean up the whole application. `helm uninstall sms-app` should do the trick, otherwise manually apply `kubectl delete` all resources.*
 
 #### Accessing the application
-Acces the app via http://team16-sms.local/sms/
+Access the app:
+- when added to hosts file http://team16-sms.local/sms/
+- or simply http://192.168.56.91/sms/
 
 #### Debugging and verifying
 **Nginx Ingress**
-Main entry point for web app:
 http://192.168.56.90
   
 **Istio Gateway**:
-Alternative entry with service mesh features, includes A/B testing:
 http://192.168.56.91
 
 **Direct Service Access (for debugging):**
