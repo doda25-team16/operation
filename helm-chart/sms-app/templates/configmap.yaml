@@ -10,3 +10,4 @@ metadata:
 data:
   MODEL_SERVICE_URL: {{ .Values.app.env.modelServiceUrl | quote }}
   SERVER_PORT: {{ .Values.app.env.serverPort | quote }}
+  MODEL_HOST: {{ .Values.app.env.modelHost | quote }}
