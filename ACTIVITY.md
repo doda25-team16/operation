@@ -107,5 +107,7 @@ Worked on steps 8, 9 10 and 11 of A2. These envolved ensuring all nodes are reac
 
 ### Week Q2.8 (Jan 12+)
 
+- Caio: https://github.com/doda25-team16/operation/pull/95 Our deployment was missing the section about the monitoring stack. Thus, I wrote a small section in the deployment.md which discussed the monitoring stack and how its different pieces are connected.
+
 - Johnny: https://github.com/doda25-team16/operation/pull/94. Looked over two PRs this week and implemented documentation and logic for pre-deployed secrets since our pre-existing logic was pre-defined and graded "poor" on the rubric.
 - Uddhav: https://github.com/doda25-team16/operation/pull/93 Completed the continuous experimentation part this week. Implemented 90/10 traffic split via Istio VirtualService
