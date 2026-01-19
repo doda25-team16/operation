@@ -1,4 +1,4 @@
-- hosts: control
+- hosts: ctrl
   become: yes
   vars:
     kube_user: "vagrant"
