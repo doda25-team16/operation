@@ -82,9 +82,9 @@ Two DestinationRules define version subsets:
 - **Port**: 8081
 - **Deployments**: `sms-model-latest` and `sms-model-v1`
 
-### 4. Monitoring Stack
+### 4. Monitoring Stack 
 
-#### TODO: Add monitoring stack details here when available.
+Monitoring begins at the frontend, where a variety of metrics are gathered and are visible through `sms/metrics`. We use Prometheus to gather the data from this endpoint at an interval of 1 second (This was decided upon on the `monitoring.yml` file). It is important to note that once this data is gathered by Prometheus it can be viewed on the Prometheus URL by searching up the specific data you would like to view. However, we have implemented a Grafana dashboard (`grafana-dashboard-configmap.yml`) which takes the gathered Prometheus data and displays it in several different ways depending on what it is meant to show. An alert manager has also been setup in `alertmanager.yl` that gathers the prometheus data and alerts users based on that data.
 
 ### 5. Management Interface
 
