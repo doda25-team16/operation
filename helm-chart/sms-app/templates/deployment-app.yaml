@@ -52,6 +52,13 @@ spec:
               configMapKeyRef:
                 name: {{ $appName }}-config
                 key: MODEL_SERVICE_URL
+
+          - name: MODEL_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: {{ $appName }}-config
+                key: MODEL_HOST
+
           - name: SECRET
             valueFrom:
               secretKeyRef:
