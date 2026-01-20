@@ -55,8 +55,9 @@ spec:
           - name: SECRET
             valueFrom:
               secretKeyRef:
-                name: {{ $appName }}-secret
-                key: MY_SECRET
+                name: {{ required "app.secret.secretName is required (Excellence Requirement - Pre-deployed Secret)" $.Values.app.secret.secretName }}
+                # name: {{ $.Values.app.secret.secretName }}
+                key: {{ $.Values.app.secret.key }}
         {{- if $.Values.resources }}
         resources:
           {{- toYaml $.Values.resources | nindent 10 }}
