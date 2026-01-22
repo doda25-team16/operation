@@ -84,7 +84,8 @@ This runs the `general.yaml`, `ctrl.yaml` and `node.yaml` playbooks.
 **Finalization step**
 After `vagrant up` completes, run the `finalization.yaml` playbook manually:
 ```bash
-ansible-playbook -i /vagrant/ansible/inventory.cfg /vagrant/ansible/finalization.yaml
+# from the operation root folder
+ansible-playbook -i ansible/inventory.cfg ansible/finalization.yaml
 ```
 
 At this point the following is provisioned, and the cluster is ready for deployment:
@@ -119,10 +120,6 @@ helm rollback sms-app 1
 # Uninstall
 helm uninstall sms-app
 ```
-Then add our url to the hosts file:
-```bash
-echo "192.168.56.90 team16-sms.local" | sudo tee -a /etc/hosts
-```
 
 Check [helm-chart/sms-app/README.md](helm-chart/sms-app/README.md) for detailed information about the helm chart config.
 
@@ -142,30 +139,37 @@ kubectl apply -f k8s/prometheus-rules.yml
 kubectl apply -f k8s/alertmanager.yml
 ```
 
-Then add our url to the known hosts file:
-```bash
-echo "192.168.56.90 team16-sms.local" | sudo tee -a /etc/hosts
-```
-
 *Important: if you are switching between Helm deployments and manual manifest deployments, make sure to clean up the whole application. `helm uninstall sms-app` should do the trick, otherwise manually apply `kubectl delete` all resources.*
 
-#### Accessing the application
-Access the app:
-- when added to hosts file http://team16-sms.local/sms/
-- or simply http://192.168.56.91/sms/
+#### Cluster URLs
+Add these entries to your `/etc/hosts` file:
+```bash
+echo "192.168.56.90 team16-sms.local" | sudo tee -a /etc/hosts
+echo "192.168.56.90 dashboard.local" | sudo tee -a /etc/hosts
+```
+
+**Application URLs:**
+- **SMS App**: http://team16-sms.local/sms/
+- **Kubernetes Dashboard**: http://dashboard.local
+  - Get login token: `vagrant ssh ctrl` then `kubectl -n kubernetes-dashboard create token admin-user`
+- **Nginx Ingress**: http://192.168.56.90
+- **Istio Gateway**: http://192.168.56.91
+- **Grafana**: Port-forward required (see debugging section)
+- **Prometheus**: Port-forward required (see debugging section)
 
 #### Debugging and verifying
-**Nginx Ingress**
-http://192.168.56.90
-  
-**Istio Gateway**:
-http://192.168.56.91
 
 **Direct Service Access (for debugging):**
 ```bash
-# Port-forward to services from ctrl node
+# Port-forward to services from ctrl node (or with kubectl configured locally)
 kubectl port-forward svc/sms-app 8080:8080
 kubectl port-forward svc/sms-model 8081:8081
+
+# Access Grafana
+kubectl port-forward -n monitoring svc/prometheus-grafana 3000:80
+
+# Access Prometheus
+kubectl port-forward -n monitoring svc/prometheus-kube-prometheus-prometheus 9090:9090
 ```
 
 **Verify Deployment:**
