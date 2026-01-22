@@ -3,15 +3,14 @@
   vars:
     kube_user: "vagrant"
     ansible_user_home: "/home/vagrant"
-  tasks:
-    # pre-task: ensure required Ansible collections are installed
-    - name: Ensure required Ansible collections are installed (controller)
+  pre_tasks:
+    - name: Ensure required Ansible collections are installed
       delegate_to: localhost
       run_once: true
       become: no
-      ansible.builtin.command: ansible-galaxy collection install -r {{ playbook_dir }}/requirements.yml
-
-    # Step 20: Install MetalLB
+      ansible.builtin.command: ansible-galaxy collection install -r {{ playbook_dir }}/requirements.yml --force-with-deps
+      changed_when: false
+  tasks:
     - name: Install MetalLB CRDs (#20a)
       become_user: "{{ kube_user }}"
       ansible.builtin.shell: kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.14.9/config/manifests/metallb-native.yaml --insecure-skip-tls-verify=true
