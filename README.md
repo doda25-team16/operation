@@ -104,7 +104,7 @@ Use Helm to manage the deployment:
 ```bash
 # SSH into the ctrl node and run it from there
 vagrant ssh ctrl
-helm install sms-app vagrant/helm-chart/sms-app
+helm upgrade --install sms-app /vagrant/helm-chart/sms-app
 ```
 further commands if needed:
 ```bash
