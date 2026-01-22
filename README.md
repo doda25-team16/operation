@@ -149,7 +149,7 @@ echo "192.168.56.90 dashboard.local" | sudo tee -a /etc/hosts
 ```
 
 **Application URLs:**
-- **SMS App**: http://team16-sms.local/sms/ or http://192.168.56.91/sms/
+- **SMS App**: http://team16-sms.local/sms/
 - **Kubernetes Dashboard**: http://dashboard.local
   - Get login token: `vagrant ssh ctrl` then `kubectl -n kubernetes-dashboard create token admin-user`
 - **Nginx Ingress**: http://192.168.56.90
