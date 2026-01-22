@@ -11,3 +11,6 @@ spec:
     matchNames:
       - default
   endpoints: [ { port: http, path: /sms/metrics, interval: 1s } ]
+  # Add label for Prometheus Grafana integration
+  targetLabels:
+    - version
