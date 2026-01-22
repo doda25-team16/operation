@@ -38,19 +38,26 @@ The services are configured to be flexible using environment variables. You can 
 
 | Variable  | Service  | Default  | Description  |
 |---|---|---|---|
+| `SERVER_VERSION`  | `sms-app`  | `latest`  | Version of the release of app service taken from releases.  |
 | `SERVER_PORT`  | `sms-app`  | `8080`  | Port the app service will listen on for the user browser.  |
+| `MODEL_VERSION`  | `sms-model`  | `latest`  | Version of the release of model service taken from releases.  |
 | `MODEL_PORT`  | `sms-model`  | `8081`  | Port the model service will listen on for the frontend requests.  |
+| `MODEL_URL`  | `https://github.com/doda25-team16/model-service/releases/download/a4-v2/model-release.tar.gz`  | `8081`  | URL of the trained model taken from releases in model service.  |
+
 
 **Example: Custom ports via terminal**
 ```bash
-SERVER_PORT=9000 MODEL_PORT=8090 docker compose up -d
+SERVER_VERSION=latest SERVER_PORT=9000 MODEL_VERSION=latest MODEL_PORT=8090 MODEL_URL=https://github.com/doda25-team16/model-service/releases/download/a4-v2/model-release.tar.gz docker compose up -d
 ```
 Access at: http://localhost:9000/sms
 
 **Example: Custom ports via `.env` file**
 ```env
-SERVER_PORT=9000
 MODEL_PORT=8090
+MODEL_VERSION=latest
+MODEL_URL=https://github.com/doda25-team16/model-service/releases/download/a4-v2/model-release.tar.gz
+SERVER_PORT=9000
+APP_VERSION=latest
 ```
 Then simply use the default command to start the application up:
 ```bash
