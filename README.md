@@ -84,7 +84,8 @@ This runs the `general.yaml`, `ctrl.yaml` and `node.yaml` playbooks.
 **Finalization step**
 After `vagrant up` completes, run the `finalization.yaml` playbook manually:
 ```bash
-ansible-playbook -i /vagrant/ansible/inventory.cfg /vagrant/ansible/finalization.yaml
+# from the operation root folder
+ansible-playbook -i ansible/inventory.cfg ansible/finalization.yaml
 ```
 
 At this point the following is provisioned, and the cluster is ready for deployment:
