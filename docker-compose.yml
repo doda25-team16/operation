@@ -1,13 +1,13 @@
 services:
   # Model service
   sms-model:
-    image: ghcr.io/doda25-team16/sms-model:latest
+    image: ghcr.io/doda25-team16/sms-model:${MODEL_VERSION:-latest}
     container_name: sms-model
     
     # Set the dynamic port
     environment:
       - MODEL_PORT=${MODEL_PORT:-8081}    
-      - MODEL_URL=${MODEL_URL}
+      - MODEL_URL=${MODEL_URL:-https://github.com/doda25-team16/model-service/releases/download/a4-v2/model-release.tar.gz}
     ports:
       - "${MODEL_PORT:-8081}:${MODEL_PORT:-8081}"
       
@@ -16,7 +16,7 @@ services:
 
   # App service
   sms-app:
-    image: ghcr.io/doda25-team16/sms-app:latest
+    image: ghcr.io/doda25-team16/sms-app:${APP_VERSION:-latest}
     container_name: sms-app
       
     # Set the dynamic port and the URL
