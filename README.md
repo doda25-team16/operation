@@ -144,7 +144,7 @@ kubectl apply -f k8s/alertmanager.yml
 #### Cluster URLs
 Add these entries to your `/etc/hosts` file:
 ```bash
-echo "192.168.56.90 team16-sms.local" | sudo tee -a /etc/hosts
+echo "192.168.56.91 team16-sms.local" | sudo tee -a /etc/hosts
 echo "192.168.56.90 dashboard.local" | sudo tee -a /etc/hosts
 ```
 
