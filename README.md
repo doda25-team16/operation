@@ -213,8 +213,8 @@ kubectl logs -l app=sms-model
 
 ## Documentation
 Further documentation can be found here:
-- [deployment.md](deployment.md) - Detailed architecture and networking
-- [extension.md](extension.md) - Advanced features to be implemented
+- [docs/deployment.md](docs/deployment.md) - Detailed architecture and networking
+- [docs/extension.md](docs/extension.md) - Advanced features to be implemented
 - [helm-chart/sms-app/README.md](helm-chart/sms-app/README.md) - Helm chart specific usage info
 
 ---
