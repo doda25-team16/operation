@@ -120,3 +120,4 @@ Worked on steps 8, 9 10 and 11 of A2. These envolved ensuring all nodes are reac
 ### Week Q2.9 (Jan 19+)
 
 - Uddhav: https://github.com/doda25-team16/model-service/pull/25 We were facing certain path issues in the serve_model.py and the text_preprocessing.py files. After changing those our model service was not working which we realised was because we didn't release and updated image to reflect the changes. So in this PR, I bumped up the model service version to v0.0.9 and pushed with the appropriate tag.
+- Ignas: https://github.com/doda25-team16/operation/pull/103 https://github.com/doda25-team16/operation/pull/106 This week was mostly spent on testing our whole application, making some final fixes, and making sure documentation is correct
