@@ -16,7 +16,7 @@ There are 2 ways to deploy the application:
 
 #### Requirements
 1. Docker & Docker Compose: Must be installed and running on the host machine
-2. Built Images: The following application images must be built:
+2. Optional: Built Images: The following application images must be built if you want to use local built images. Otherwise it will use the pre-built images from GHCR by default.
     - `sms-app` (from the `app` repository)
     - `sms-model` (from the `model-service` repository)
 
@@ -26,9 +26,23 @@ There are 2 ways to deploy the application:
     docker build -t sms-model .
     ```
 
+3. Create a local `.env` file in the root of the operation repo, with the default values:
+```
+MODEL_PORT=8081
+MODEL_VERSION=latest
+MODEL_URL=https://github.com/doda25-team16/model-service/releases/download/a4-v2/model-release.tar.gz
+SERVER_PORT=8080
+APP_VERSION=latest
+```
+
 #### Starting the application
 Run the application with default settings:
 ```
+# make sure youre in the operation repo
+# pull most recent images
+docker compose pull
+
+# start local server
 docker compose up -d
 ```
 This exposes the app frontend on port `8080` and the model on port `8081`. Once both services are started up healthy, the web UI can be accessed at http://localhost:8080/sms
@@ -199,8 +213,8 @@ kubectl logs -l app=sms-model
 
 ## Documentation
 Further documentation can be found here:
-- [deployment.md](deployment.md) - Detailed architecture and networking
-- [extension.md](extension.md) - Advanced features to be implemented
+- [docs/deployment.md](docs/deployment.md) - Detailed architecture and networking
+- [docs/extension.md](docs/extension.md) - Advanced features to be implemented
 - [helm-chart/sms-app/README.md](helm-chart/sms-app/README.md) - Helm chart specific usage info
 
 ---
