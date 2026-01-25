@@ -32,6 +32,8 @@ spec:
       - name: {{ $modelName }}
         image: "{{ $.Values.model.image.repository }}:{{ $tag }}"
         imagePullPolicy: {{ $.Values.model.image.pullPolicy }}
+        # # Add directory
+        # workingDir: /root
 
         ports:
           - name: http
