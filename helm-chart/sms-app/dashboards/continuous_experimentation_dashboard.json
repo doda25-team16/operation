@@ -102,7 +102,7 @@
       "targets": [
         {
           "editorMode": "code",
-          "expr": "sum by (version)(rate(total_requests[1m]))",
+          "expr": "sum by (version, result) (rate(total_requests{version!=\"\"}[1m]))",
           "legendFormat": "{{version}} - {{result}}",
           "range": true,
           "refId": "A"
@@ -169,7 +169,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum(rate(total_requests{version=\"canary\"}[1m])) / sum(rate(total_requests[1m]))",
+          "expr": "sum by (version) (rate(total_requests{version!=\"\"}[1m]))",
           "legendFormat": "{{version}}",
           "range": true,
           "refId": "A"
