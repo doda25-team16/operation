@@ -81,7 +81,7 @@
             "uid": "prometheus"
           },
           "editorMode": "builder",
-          "expr": "active_requests",
+          "expr": "sum(active_requests)",
           "hide": false,
           "instant": false,
           "legendFormat": "Processing",
@@ -255,7 +255,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "rate(total_requests[1m])",
+          "expr": "sum by (result) (rate(total_requests[1m]))",
           "instant": false,
           "legendFormat": "{{result}}",
           "range": true,
