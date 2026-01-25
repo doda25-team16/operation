@@ -16,7 +16,7 @@ There are 2 ways to deploy the application:
 
 #### Requirements
 1. Docker & Docker Compose: Must be installed and running on the host machine
-2. Built Images: The following application images must be built:
+2. Optional: Built Images: The following application images must be built if you want to use local built images. Otherwise it will use the pre-built images from GHCR by default.
     - `sms-app` (from the `app` repository)
     - `sms-model` (from the `model-service` repository)
 
@@ -26,9 +26,23 @@ There are 2 ways to deploy the application:
     docker build -t sms-model .
     ```
 
+3. Create a local `.env` file in the root of the operation repo, with the default values:
+```
+MODEL_PORT=8081
+MODEL_VERSION=latest
+MODEL_URL=https://github.com/doda25-team16/model-service/releases/download/a4-v2/model-release.tar.gz
+SERVER_PORT=8080
+APP_VERSION=latest
+```
+
 #### Starting the application
 Run the application with default settings:
 ```
+# make sure youre in the operation repo
+# pull most recent images
+docker compose pull
+
+# start local server
 docker compose up -d
 ```
 This exposes the app frontend on port `8080` and the model on port `8081`. Once both services are started up healthy, the web UI can be accessed at http://localhost:8080/sms
@@ -38,19 +52,26 @@ The services are configured to be flexible using environment variables. You can 
 
 | Variable  | Service  | Default  | Description  |
 |---|---|---|---|
+| `SERVER_VERSION`  | `sms-app`  | `latest`  | Version of the release of app service taken from releases.  |
 | `SERVER_PORT`  | `sms-app`  | `8080`  | Port the app service will listen on for the user browser.  |
+| `MODEL_VERSION`  | `sms-model`  | `latest`  | Version of the release of model service taken from releases.  |
 | `MODEL_PORT`  | `sms-model`  | `8081`  | Port the model service will listen on for the frontend requests.  |
+| `MODEL_URL`  | `https://github.com/doda25-team16/model-service/releases/download/a4-v2/model-release.tar.gz`  | `8081`  | URL of the trained model taken from releases in model service.  |
+
 
 **Example: Custom ports via terminal**
 ```bash
-SERVER_PORT=9000 MODEL_PORT=8090 docker compose up -d
+SERVER_VERSION=latest SERVER_PORT=9000 MODEL_VERSION=latest MODEL_PORT=8090 MODEL_URL=https://github.com/doda25-team16/model-service/releases/download/a4-v2/model-release.tar.gz docker compose up -d
 ```
 Access at: http://localhost:9000/sms
 
 **Example: Custom ports via `.env` file**
 ```env
-SERVER_PORT=9000
 MODEL_PORT=8090
+MODEL_VERSION=latest
+MODEL_URL=https://github.com/doda25-team16/model-service/releases/download/a4-v2/model-release.tar.gz
+SERVER_PORT=9000
+APP_VERSION=latest
 ```
 Then simply use the default command to start the application up:
 ```bash
@@ -84,7 +105,8 @@ This runs the `general.yaml`, `ctrl.yaml` and `node.yaml` playbooks.
 **Finalization step**
 After `vagrant up` completes, run the `finalization.yaml` playbook manually:
 ```bash
-ansible-playbook -i /vagrant/ansible/inventory.cfg /vagrant/ansible/finalization.yaml
+# from the operation root folder
+ansible-playbook -i ansible/inventory.cfg ansible/finalization.yaml
 ```
 
 At this point the following is provisioned, and the cluster is ready for deployment:
@@ -103,7 +125,7 @@ Use Helm to manage the deployment:
 ```bash
 # SSH into the ctrl node and run it from there
 vagrant ssh ctrl
-helm install sms-app vagrant/helm-chart/sms-app
+helm upgrade --install sms-app /vagrant/helm-chart/sms-app
 ```
 further commands if needed:
 ```bash
@@ -118,10 +140,6 @@ helm rollback sms-app 1
 
 # Uninstall
 helm uninstall sms-app
-```
-Then add our url to the hosts file:
-```bash
-echo "192.168.56.90 team16-sms.local" | sudo tee -a /etc/hosts
 ```
 
 Check [helm-chart/sms-app/README.md](helm-chart/sms-app/README.md) for detailed information about the helm chart config.
@@ -142,30 +160,37 @@ kubectl apply -f k8s/prometheus-rules.yml
 kubectl apply -f k8s/alertmanager.yml
 ```
 
-Then add our url to the known hosts file:
-```bash
-echo "192.168.56.90 team16-sms.local" | sudo tee -a /etc/hosts
-```
-
 *Important: if you are switching between Helm deployments and manual manifest deployments, make sure to clean up the whole application. `helm uninstall sms-app` should do the trick, otherwise manually apply `kubectl delete` all resources.*
 
-#### Accessing the application
-Access the app:
-- when added to hosts file http://team16-sms.local/sms/
-- or simply http://192.168.56.91/sms/
+#### Cluster URLs
+Add these entries to your `/etc/hosts` file:
+```bash
+echo "192.168.56.91 team16-sms.local" | sudo tee -a /etc/hosts
+echo "192.168.56.90 dashboard.local" | sudo tee -a /etc/hosts
+```
+
+**Application URLs:**
+- **SMS App**: http://team16-sms.local/sms/
+- **Kubernetes Dashboard**: http://dashboard.local
+  - Get login token: `vagrant ssh ctrl` then `kubectl -n kubernetes-dashboard create token admin-user`
+- **Nginx Ingress**: http://192.168.56.90
+- **Istio Gateway**: http://192.168.56.91
+- **Grafana**: Port-forward required (see debugging section)
+- **Prometheus**: Port-forward required (see debugging section)
 
 #### Debugging and verifying
-**Nginx Ingress**
-http://192.168.56.90
-  
-**Istio Gateway**:
-http://192.168.56.91
 
 **Direct Service Access (for debugging):**
 ```bash
-# Port-forward to services from ctrl node
+# Port-forward to services from ctrl node (or with kubectl configured locally)
 kubectl port-forward svc/sms-app 8080:8080
 kubectl port-forward svc/sms-model 8081:8081
+
+# Access Grafana
+kubectl port-forward -n monitoring svc/prometheus-grafana 3000:80
+
+# Access Prometheus
+kubectl port-forward -n monitoring svc/prometheus-kube-prometheus-prometheus 9090:9090
 ```
 
 **Verify Deployment:**
@@ -188,8 +213,8 @@ kubectl logs -l app=sms-model
 
 ## Documentation
 Further documentation can be found here:
-- [deployment.md](deployment.md) - Detailed architecture and networking
-- [extension.md](extension.md) - Advanced features to be implemented
+- [docs/deployment.md](docs/deployment.md) - Detailed architecture and networking
+- [docs/extension.md](docs/extension.md) - Advanced features to be implemented
 - [helm-chart/sms-app/README.md](helm-chart/sms-app/README.md) - Helm chart specific usage info
 
 ---

@@ -116,3 +116,9 @@ Worked on steps 8, 9 10 and 11 of A2. These envolved ensuring all nodes are reac
 - Yuting: https://github.com/doda25-team16/operation/pull/96 Added a second Grafana Dashboard to monitor the differences between versions in the A4 Continuous Experimentation. Enable automatic loading the dashboards by Helm. Fix a small bug causing vagrant control to fail applying finalization.yaml.
 
 - Ignas: https://github.com/doda25-team16/operation/pull/97 Started from a clean VM and went through all the provisioning and deployment steps to create a fresh new README.md and confirm everything works. Our old README had not been updated since week 4.
+
+### Week Q2.9 (Jan 19+)
+
+- Uddhav: https://github.com/doda25-team16/model-service/pull/25 We were facing certain path issues in the serve_model.py and the text_preprocessing.py files. After changing those our model service was not working which we realised was because we didn't release and updated image to reflect the changes. So in this PR, I bumped up the model service version to v0.0.9 and pushed with the appropriate tag.
+- Ignas: https://github.com/doda25-team16/operation/pull/103 https://github.com/doda25-team16/operation/pull/106 This week was mostly spent on testing our whole application, making some final fixes, and making sure documentation is correct
+- Job: https://github.com/doda25-team16/operation/pull/105 This week, I researched more into the extension and updated the extension.md to have more information, also updated the file structure for the docs.
