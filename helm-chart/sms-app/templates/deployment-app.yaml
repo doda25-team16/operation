@@ -25,6 +25,8 @@ spec:
         app: {{ $appName }}
         release: {{ $rel }}
         version: {{ $v }}
+      annotations:
+        sidecar.istio.io/inject: "true"
     spec:
       volumes:
         - name: shared-volume

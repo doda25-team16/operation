@@ -20,6 +20,8 @@ spec:
         app: {{ .Values.app.name }}
         release: {{ .Release.Name }}
         version: {{ .Values.app.canaryVersion | default "canary" }}
+      annotations:
+        sidecar.istio.io/inject: "true"
     spec:
       containers:
       - name: {{ .Values.app.name }}

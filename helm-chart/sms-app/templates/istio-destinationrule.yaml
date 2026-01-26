@@ -4,6 +4,12 @@ metadata:
   name: {{ .Values.app.name }}-dr
 spec:
   host: {{ .Values.app.name }}
+  trafficPolicy:
+    loadBalancer:
+      consistentHash:
+        httpCookie:
+          name: {{ .Values.istio.stickyCookieName | default "doda-session" }}
+          ttl: {{ .Values.istio.stickyCookieTtl | default "1h" }}
   subsets:
   - name: stable
     labels: { version: stable }

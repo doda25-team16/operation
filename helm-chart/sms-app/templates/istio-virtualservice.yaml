@@ -14,13 +14,7 @@ metadata:
   namespace: {{ .Values.namespace }}
 spec:
   gateways:
-  - {{ .Release.Namespace }}/{{ .Values.istio.gatewayName | default "my-gateway" }}
-  hosts:
-  - "*"
-  name: {{ .Values.istio.entryVirtualServiceName | default "my-entry-service" | quote }}
-spec:
-  gateways:
-    - {{ .Values.istio.gatewayName | default "my-gateway" | quote }}
+    - {{ .Release.Namespace }}/{{ .Values.istio.gatewayName | default "my-gateway" }}
   hosts:
 {{- range (.Values.istio.entryHosts | default (list "*")) }}
     - {{ . | quote }}
