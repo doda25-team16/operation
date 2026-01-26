@@ -71,5 +71,5 @@ trafficManagement:
     requestsPerMinute: 10
 
   splitting:
-    stableWeight: 50
-    canaryWeight: 50
+    stableWeight: 90
+    canaryWeight: 10
