@@ -4,8 +4,8 @@ app:
   replicaCount: 1
   image:
     repository: ghcr.io/doda25-team16/sms-app
-    stableTag: v0.0.9
-    canaryTag: v0.0.8
+    stableTag: "0.0.9"
+    canaryTag: "0.0.8"
     pullPolicy: Always
   service:
     type: ClusterIP
@@ -71,5 +71,5 @@ trafficManagement:
     requestsPerMinute: 10
 
   splitting:
-    stableWeight: 90
-    canaryWeight: 10
+    stableWeight: 50
+    canaryWeight: 50
