@@ -102,7 +102,7 @@
       "targets": [
         {
           "editorMode": "code",
-          "expr": "sum(rate(total_requests[1m])) by (version, result)",
+          "expr": "sum by (version, result) (rate(total_requests{version!=\"\"}[1m]))",
           "legendFormat": "{{version}} - {{result}}",
           "range": true,
           "refId": "A"
@@ -169,7 +169,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum(rate(total_requests[1m])) by (version)",
+          "expr": "sum by (version) (rate(total_requests{version!=\"\"}[1m]))",
           "legendFormat": "{{version}}",
           "range": true,
           "refId": "A"
@@ -271,6 +271,57 @@
         }
       ],
       "title": "Latency Comparison",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "Clicks / Sec",
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "showPoints": "never"
+          },
+          "unit": "reqps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 16
+      },
+      "id": 4,
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "sum(rate(button_clicked[1m])) by (version)",
+          "legendFormat": "{{version}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Send Button Clicks (Request Rate)",
       "type": "timeseries"
     }
   ],

@@ -88,6 +88,7 @@ Vagrant.configure("2") do |config|
       node.vm.provision :ansible do |node_ansible|
         node_ansible.compatibility_mode = "2.0"
         node_ansible.playbook = "ansible/general.yaml"
+        node_ansible.inventory_path = "ansible/inventory.cfg"
         node_ansible.extra_vars = { hosts_list: hosts_list }
       end
 
@@ -95,6 +96,7 @@ Vagrant.configure("2") do |config|
       node.vm.provision :ansible do |node_ansible|
         node_ansible.compatibility_mode = "2.0"
         node_ansible.playbook = "ansible/node.yaml"
+        node_ansible.inventory_path = "ansible/inventory.cfg"
       end
     end
   end

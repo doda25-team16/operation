@@ -1,0 +1,22 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ .Values.app.name }}-monitor
+  # Prometheus is running in the 'monitoring' namespace
+  namespace: monitoring
+  labels:
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.app.name }}
+  namespaceSelector:
+    matchNames:
+      - {{ .Release.Namespace }}
+  endpoints:
+    - port: http
+      path: /sms/metrics
+      interval: 1s
+  # Passing the version label to Prometheus
+  podTargetLabels:
+    - version
