@@ -31,7 +31,7 @@ The SMS Spam Detection Application is deployed on a Kubernetes cluster with Isti
 
 ## Architecture Diagram
 
-![Architecture Diagram](Istio Diagram.png)
+![Architecture Diagram](images/Istio%20Diagram.png)
 
 The diagram above illustrates the two distinct traffic paths into the cluster:
 
