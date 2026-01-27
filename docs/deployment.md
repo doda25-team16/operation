@@ -29,15 +29,6 @@ The SMS Spam Detection Application is deployed on a Kubernetes cluster with Isti
 - **Dashboard**: Kubernetes Dashboard
 - **Deployment**: Helm 3
 
-## Architecture Diagram
-
-![Architecture Diagram](architecture-diagram.png)
-
-The diagram above illustrates the two distinct traffic paths into the cluster:
-
-1.  **Standard Access (Left)**: Users access `http://team16-sms.local` via the Nginx Ingress. This routes traffic to the Kubernetes Service, which performs standard load balancing across all available pods.
-2.  **Istio Routing (Right)**: Users access `http://192.168.56.91` via the Istio Gateway. This path flows through the **VirtualService**, which actively manages traffic and enforces the **90/10 split** between the stable (`latest`) and new (`v1`) versions.
-
 ## Deployment Components
 
 ### 1. Load Balancing & Ingress Layer
