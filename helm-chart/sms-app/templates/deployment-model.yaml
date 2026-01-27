@@ -1,50 +1,41 @@
-{{- $modelName := .Values.model.name -}}
-{{- $ns := .Values.namespace -}}
-{{- $rel := .Release.Name -}}
-
-{{- range $v := list "stable" "canary" }}
-{{- $tag := ternary $.Values.model.image.stableTag $.Values.model.image.canaryTag (eq $v "stable") }}
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ $modelName }}-{{ $v }}
-  namespace: {{ $ns }}
+  name: {{ .Values.model.name }}-stable
+  namespace: {{ .Values.namespace }}
   labels:
-    app: {{ $modelName }}
-    release: {{ $rel }}
-    version: {{ $v }}
+    app: {{ .Values.model.name }}
+    release: {{ .Release.Name }}
+    version: stable
 spec:
-  replicas: {{ $.Values.model.replicaCount }}
+  replicas: {{ .Values.model.replicaCount }}
   selector:
     matchLabels:
-      app: {{ $modelName }}
-      release: {{ $rel }}
-      version: {{ $v }}
+      app: {{ .Values.model.name }}
+      release: {{ .Release.Name }}
+      version: stable
   template:
     metadata:
       labels:
-        app: {{ $modelName }}
-        release: {{ $rel }}
-        version: {{ $v }}
+        app: {{ .Values.model.name }}
+        release: {{ .Release.Name }}
+        version: stable
     spec:
       containers:
-      - name: {{ $modelName }}
-        image: "{{ $.Values.model.image.repository }}:{{ $tag }}"
-        imagePullPolicy: {{ $.Values.model.image.pullPolicy }}
+      - name: {{ .Values.model.name }}
+        image: "{{ .Values.model.image.repository }}:{{ .Values.model.image.stableTag }}"
+        imagePullPolicy: {{ .Values.model.image.pullPolicy }}
         # # Add directory
         # workingDir: /root
 
         ports:
           - name: http
-            containerPort: {{ $.Values.model.service.targetPort }}
+            containerPort: {{ .Values.model.service.targetPort }}
             protocol: TCP
         env:
           - name: MODEL_PORT
-            value: {{ $.Values.model.env.modelPort | quote }}
-        {{- if $.Values.resources }}
+            value: {{ .Values.model.env.modelPort | quote }}
+        {{- if .Values.resources }}
         resources:
-          {{- toYaml $.Values.resources | nindent 10 }}
+          {{- toYaml .Values.resources | nindent 10 }}
         {{- end }}
----
-{{- end }}

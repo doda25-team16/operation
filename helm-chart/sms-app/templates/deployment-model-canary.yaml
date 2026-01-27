@@ -7,23 +7,24 @@ metadata:
     app: {{ .Values.model.name }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
+    version: canary
 spec:
   replicas: {{ .Values.model.replicaCount }}
   selector:
     matchLabels:
       app: {{ .Values.model.name }}
       release: {{ .Release.Name }}
-      version: {{ .Values.model.canaryVersion | default "canary" }}
+      version: canary
   template:
     metadata:
       labels:
         app: {{ .Values.model.name }}
         release: {{ .Release.Name }}
-        version: {{ .Values.model.canaryVersion | default "canary" }}
+        version: canary
     spec:
       containers:
       - name: {{ .Values.model.name }}
-        image: "{{ .Values.model.image.repository }}:{{ .Values.model.image.tag }}"
+        image: "{{ .Values.model.image.repository }}:{{ .Values.model.image.canaryTag }}"
         imagePullPolicy: {{ .Values.model.image.pullPolicy }}
         ports:
           - name: http
