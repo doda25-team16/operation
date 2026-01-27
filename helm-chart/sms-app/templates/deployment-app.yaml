@@ -6,20 +6,20 @@ metadata:
   labels:
     app: {{ .Values.app.name }}
     release: {{ .Release.Name }}
-    version: stable
+    version: {{ .Values.app.version }}
 spec:
   replicas: {{ .Values.app.replicaCount }}
   selector:
     matchLabels:
       app: {{ .Values.app.name }}
       release: {{ .Release.Name }}
-      version: stable
+      version: {{ .Values.app.version }}
   template:
     metadata:
       labels:
         app: {{ .Values.app.name }}
         release: {{ .Release.Name }}
-        version: stable
+        version: {{ .Values.app.version }}
     spec:
       volumes:
         - name: shared-volume
