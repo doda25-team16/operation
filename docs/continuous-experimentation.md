@@ -14,10 +14,10 @@ The canary version with the yellow button will increase button click rates compa
 **Falsifiable**: If canary version shows latency increase > 10% OR different prediction distribution (ham/spam/failed ratios) OR does NOT show increased button clicks, the hypothesis is rejected.
 
 ## Relevant Metrics
-1. **Button Clicks**: button_clicked metric - comparing click frequency between stable and canary
+1. **Button Clicks**: button_clicked metric, comparing click frequency between stable and canary
 2. **Latency**: Response time comparison between stable and canary
 3. **Prediction Behavior**: Frequency distribution of outcomes (ham, spam, failed) for each version
-4. **Traffic Routing**: Verification that 90/10 split is enforced
+4. **Traffic Routing**: Verification that 90/10 split is enfored
 
 ## Experiment Setup
 - **Duration**: 1 hours
@@ -35,8 +35,8 @@ The canary version with the yellow button will increase button click rates compa
 | Traffic Split | Actual split within 85-95% / 5-15% range |
 
 ### Decision:
-- **Accept**: Button clicks increase AND latency/prediction metrics meet criteria → yellow button improves UX
-- **Reject**: Button clicks don't increase OR any other metric fails → keep stable version
+- **Accept**: Button clicks increase AND latency/prediction metrics meet criteria
+- **Reject**: Button clicks don't increase OR any other metric fails
 
 ### Rollback (Manual):
 No automatic rollback. Manual process:
