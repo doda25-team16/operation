@@ -127,3 +127,5 @@ Worked on steps 8, 9 10 and 11 of A2. These envolved ensuring all nodes are reac
 
 ### Week Q2.10 (Jan 26+)
 - Ignas: https://github.com/doda25-team16/model-service/pull/26 https://github.com/doda25-team16/operation/pull/109 Split main and canary deployments for app and model. Moved alerting to Helm. Let serve_model set the model directory for preprocessing, and adjustments to docs.
+
+- Job: https://github.com/doda25-team16/operation/pull/112 and https://github.com/doda25-team16/operation/pull/113, Created continuous experimentation.md and updated deployment.md
