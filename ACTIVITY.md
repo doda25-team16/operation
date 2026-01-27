@@ -123,3 +123,6 @@ Worked on steps 8, 9 10 and 11 of A2. These envolved ensuring all nodes are reac
 - Ignas: https://github.com/doda25-team16/operation/pull/103 https://github.com/doda25-team16/operation/pull/106 This week was mostly spent on testing our whole application, making some final fixes, and making sure documentation is correct
 - Job: https://github.com/doda25-team16/operation/pull/105 This week, I researched more into the extension and updated the extension.md to have more information, also updated the file structure for the docs.
 - Yuting: https://github.com/doda25-team16/operation/pull/107 This week I updated the app frontend active_requests decrement logic, and fixed the bugs where Grafana Dashboard could not monitor the difference between versions in continuous experimentation. I also updated the deployment.md to include Grafana monitoring.
+
+### Week Q2.10 (Jan 26+)
+- Ignas: https://github.com/doda25-team16/model-service/pull/26 https://github.com/doda25-team16/operation/pull/109 moved alerting to Helm, let serve_model set the model directory for preprocessing, and adjustments to docs
