@@ -73,3 +73,36 @@ trafficManagement:
   splitting:
     stableWeight: 90
     canaryWeight: 10
+
+# Monitoring and Alerting Configuration
+monitoring:
+  enabled: true
+  namespace: monitoring
+  
+  # Prometheus Rules
+  prometheusRules:
+    enabled: true
+    interval: 15s
+    
+    highResponseTime:
+      enabled: true
+      threshold: 2  # seconds
+      for: 2m
+      severity: warning
+    
+    highMemoryUsage:
+      enabled: true
+      threshold: 0.9  # 90%
+      for: 2m
+      severity: warning
+    
+    highErrorRate:
+      enabled: true
+      threshold: 1  # errors per second
+      for: 1m
+      severity: critical
+    
+    podDown:
+      enabled: true
+      for: 1m
+      severity: critical

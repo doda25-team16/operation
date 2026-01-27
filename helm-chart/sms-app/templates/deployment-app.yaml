@@ -1,73 +1,66 @@
-{{- $appName := .Values.app.name -}}
-{{- $ns := .Values.namespace -}}
-{{- $rel := .Release.Name -}}
-
-{{- range $v := list "stable" "canary" }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ $appName }}-{{ $v }}
-  namespace: {{ $ns }}
+  name: {{ .Values.app.name }}-stable
+  namespace: {{ .Values.namespace }}
   labels:
-    app: {{ $appName }}
-    release: {{ $rel }}
-    version: {{ $v }}
+    app: {{ .Values.app.name }}
+    release: {{ .Release.Name }}
+    version: {{ .Values.app.version }}
 spec:
-  replicas: {{ $.Values.app.replicaCount }}
+  replicas: {{ .Values.app.replicaCount }}
   selector:
     matchLabels:
-      app: {{ $appName }}
-      release: {{ $rel }}
-      version: {{ $v }}
+      app: {{ .Values.app.name }}
+      release: {{ .Release.Name }}
+      version: {{ .Values.app.version }}
   template:
     metadata:
       labels:
-        app: {{ $appName }}
-        release: {{ $rel }}
-        version: {{ $v }}
+        app: {{ .Values.app.name }}
+        release: {{ .Release.Name }}
+        version: {{ .Values.app.version }}
     spec:
       volumes:
         - name: shared-volume
           emptyDir: {}
       containers:
-      - name: {{ $appName }}
-        image: "{{ $.Values.app.image.repository }}:{{ ternary $.Values.app.image.stableTag $.Values.app.image.canaryTag (eq $v "stable") }}"
-        imagePullPolicy: {{ $.Values.app.image.pullPolicy }}
+      - name: {{ .Values.app.name }}
+        image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.stableTag }}"
+        imagePullPolicy: {{ .Values.app.image.pullPolicy }}
         volumeMounts:
           - name: shared-volume
             mountPath: /app/shared
         ports:
           - name: http
-            containerPort: {{ $.Values.app.service.targetPort }}
+            containerPort: {{ .Values.app.service.targetPort }}
             protocol: TCP
         env:
           - name: SERVER_PORT
             valueFrom:
               configMapKeyRef:
-                name: {{ $appName }}-config
+                name: {{ .Values.app.name }}-config
                 key: SERVER_PORT
 
           - name: MODEL_SERVICE_URL
             valueFrom:
               configMapKeyRef:
-                name: {{ $appName }}-config
+                name: {{ .Values.app.name }}-config
                 key: MODEL_SERVICE_URL
 
           - name: MODEL_HOST
             valueFrom:
               configMapKeyRef:
-                name: {{ $appName }}-config
+                name: {{ .Values.app.name }}-config
                 key: MODEL_HOST
 
           - name: SECRET
             valueFrom:
               secretKeyRef:
-                name: {{ required "app.secret.secretName is required (Excellence Requirement - Pre-deployed Secret)" $.Values.app.secret.secretName }}
-                # name: {{ $.Values.app.secret.secretName }}
-                key: {{ $.Values.app.secret.key }}
-        {{- if $.Values.resources }}
+                name: {{ required "app.secret.secretName is required (Excellence Requirement - Pre-deployed Secret)" .Values.app.secret.secretName }}
+                # name: {{ .Values.app.secret.secretName }}
+                key: {{ .Values.app.secret.key }}
+        {{- if .Values.resources }}
         resources:
-          {{- toYaml $.Values.resources | nindent 10 }}
+          {{- toYaml .Values.resources | nindent 10 }}
         {{- end }}
----
-{{- end }}

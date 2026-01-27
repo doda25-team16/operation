@@ -7,6 +7,7 @@ metadata:
     app: {{ .Values.app.name }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
+    version: {{ .Values.app.canaryVersion | default "canary" }}
 spec:
   replicas: {{ .Values.app.replicaCount }}
   selector:
@@ -23,7 +24,7 @@ spec:
     spec:
       containers:
       - name: {{ .Values.app.name }}
-        image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}"
+        image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.canaryTag }}"
         imagePullPolicy: {{ .Values.app.image.pullPolicy }}
         ports:
           - name: http

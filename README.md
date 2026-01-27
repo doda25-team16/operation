@@ -8,7 +8,7 @@ This repository contains configuration files and documentation for deploying the
 ## Deployment options
 There are 2 ways to deploy the application:
 1. Run the apps locally with `docker compose`
-2. Run the apps on a k8s cluster manually with `kubectl` or with `helm` (recommended)
+2. Run the apps on a full k8s cluster using helm chart
 
 ---
 
@@ -120,13 +120,16 @@ At this point the following is provisioned, and the cluster is ready for deploym
 
 #### Application deployment
 
-**Method A: Helm Chart (recommended)**
+**Helm Chart (recommended)**
 Use Helm to manage the deployment:
 ```bash
 # SSH into the ctrl node and run it from there
 vagrant ssh ctrl
 helm upgrade --install sms-app /vagrant/helm-chart/sms-app
+# create a secret (not actually used but necessary)
+kubectl create secret generic sms-app-secret --from-literal=MY_SECRET=your-secret-value
 ```
+
 further commands if needed:
 ```bash
 # or with kubectl configured locally (note that now you dont need the vagrant dir)
@@ -144,21 +147,8 @@ helm uninstall sms-app
 
 Check [helm-chart/sms-app/README.md](helm-chart/sms-app/README.md) for detailed information about the helm chart config.
 
-**Method B: kubectl manifests (manual, not recommended)**
-Deploy all k8s manifests manually using `kubectl`:
-```bash
-kubectl apply -f k8s/configmap.yml
-kubectl apply -f k8s/secret.yml
-kubectl apply -f k8s/sms-app-deployment.yml
-kubectl apply -f k8s/sms-app-service.yml
-kubectl apply -f k8s/sms-model-deployment.yml
-kubectl apply -f k8s/sms-model-service.yml
-kubectl apply -f k8s/ingress.yml
-kubectl apply -f k8s/istio.yml
-kubectl apply -f k8s/monitoring.yml
-kubectl apply -f k8s/prometheus-rules.yml
-kubectl apply -f k8s/alertmanager.yml
-```
+**Legacy: Manual application of k8s manifests**
+Warning: `operation/k8s` contains k8s manifests which can be manually applied. However, these are outdated and do not have the full functionality of the helm templates. So this is not recommended to be used, unless a user has specific needs.
 
 *Important: if you are switching between Helm deployments and manual manifest deployments, make sure to clean up the whole application. `helm uninstall sms-app` should do the trick, otherwise manually apply `kubectl delete` all resources.*
 
@@ -189,8 +179,19 @@ kubectl port-forward svc/sms-model 8081:8081
 # Access Grafana
 kubectl port-forward -n monitoring svc/prometheus-grafana 3000:80
 
+# Access Grafana (on Ctrl Node) 
+kubectl port-forward --address 0.0.0.0 -n monitoring svc/prometheus-grafana 3000:80 
+(Then access via http://192.168.56.xxx:3000/)
+Username: admin
+Password: admin
+
 # Access Prometheus
 kubectl port-forward -n monitoring svc/prometheus-kube-prometheus-prometheus 9090:9090
+
+# Access Prometheus (on Ctrl Node) 
+kubectl port-forward --address 0.0.0.0 -n monitoring svc/prometheus-kube-prometheus-prometheus 9090:9090
+(Then access via http://192.168.56.xxx:9090/)
+
 ```
 
 **Verify Deployment:**
