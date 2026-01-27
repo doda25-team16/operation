@@ -126,7 +126,10 @@ Use Helm to manage the deployment:
 # SSH into the ctrl node and run it from there
 vagrant ssh ctrl
 helm upgrade --install sms-app /vagrant/helm-chart/sms-app
+# create a secret (not actually used but necessary)
+kubectl create secret generic sms-app-secret --from-literal=MY_SECRET=your-secret-value
 ```
+
 further commands if needed:
 ```bash
 # or with kubectl configured locally (note that now you dont need the vagrant dir)
