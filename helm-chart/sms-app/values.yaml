@@ -35,7 +35,7 @@ model:
     targetPort: 8081
   env:
     modelPort: "8081"
-    modelUrl: "https://github.com/doda25-team16/model-service/releases/download/a4-v2/model-release.tar.gz"
+    modelUrl: "https://github.com/doda25-team16/model-service/releases/latest/download/model-release.tar.gz"
   version: stable         
   canaryVersion: canary   
 # Ingress configuration
