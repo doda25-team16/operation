@@ -81,6 +81,7 @@ Monitoring begins at the frontend, where a variety of metrics are gathered and a
 \- `button_clicked`: Number of "Send" button clicked.
 \- `total_requests`: Total number of requests sent to the model. This metrics can be filtered by the resultant response type "ham", "spam", and "failed".
 \- `active_requests`: The number of requests currently being processing by the model.
+\- `latency`: The response time of the model in milliseconds.
 
 ### 5. Management Interface
 
