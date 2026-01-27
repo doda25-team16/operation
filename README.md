@@ -179,8 +179,19 @@ kubectl port-forward svc/sms-model 8081:8081
 # Access Grafana
 kubectl port-forward -n monitoring svc/prometheus-grafana 3000:80
 
+# Access Grafana (on Ctrl Node) 
+kubectl port-forward --address 0.0.0.0 -n monitoring svc/prometheus-grafana 3000:80 
+(Then access via http://192.168.56.xxx:3000/)
+Username: admin
+Password: admin
+
 # Access Prometheus
 kubectl port-forward -n monitoring svc/prometheus-kube-prometheus-prometheus 9090:9090
+
+# Access Prometheus (on Ctrl Node) 
+kubectl port-forward --address 0.0.0.0 -n monitoring svc/prometheus-kube-prometheus-prometheus 9090:9090
+(Then access via http://192.168.56.xxx:9090/)
+
 ```
 
 **Verify Deployment:**
