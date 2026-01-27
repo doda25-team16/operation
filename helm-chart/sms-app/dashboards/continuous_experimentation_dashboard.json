@@ -264,7 +264,7 @@
       "targets": [
         {
           "editorMode": "code",
-          "expr": "rate(request_duration_sum[1m]) / rate(request_duration_count[1m])",
+          "expr": "rate(request_duration_sum{version!=\"\"}[1m]) / rate(request_duration_count{version!=\"\"}[1m])",
           "legendFormat": "Latency {{version}}",
           "range": true,
           "refId": "A"
@@ -315,7 +315,7 @@
       "targets": [
         {
           "editorMode": "code",
-          "expr": "sum(rate(button_clicked[1m])) by (version)",
+          "expr": "sum(rate(button_clicked{version!=\"\"}[1m])) by (version)",
           "legendFormat": "{{version}}",
           "range": true,
           "refId": "A"
