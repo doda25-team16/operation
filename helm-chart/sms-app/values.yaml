@@ -35,6 +35,7 @@ model:
     targetPort: 8081
   env:
     modelPort: "8081"
+    modelUrl: "https://github.com/doda25-team16/model-service/releases/latest/download/model-release.tar.gz"
   version: stable         
   canaryVersion: canary   
 # Ingress configuration
@@ -66,7 +67,7 @@ istio:
     - "*"
 
 trafficManagement:
-  rateLimit:
+  ratelimit:
     enabled: true
     requestsPerMinute: 10
 

@@ -33,6 +33,8 @@ spec:
         env:
           - name: MODEL_PORT
             value: {{ .Values.model.env.modelPort | quote }}
+          - name: MODEL_URL
+            value: {{ .Values.model.env.modelUrl | quote }}
           - name: EXPERIMENT_VARIANT
             value: "canary"
         {{- if .Values.resources }}

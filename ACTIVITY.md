@@ -119,7 +119,13 @@ Worked on steps 8, 9 10 and 11 of A2. These envolved ensuring all nodes are reac
 
 ### Week Q2.9 (Jan 19+)
 
+-Caio: https://github.com/doda25-team16/operation/pull/102/ Update the .env file and the section in the readme to account for new enviroment variables. These include one that account for the model and app version as well as the url for the model to be used.
 - Uddhav: https://github.com/doda25-team16/model-service/pull/25 We were facing certain path issues in the serve_model.py and the text_preprocessing.py files. After changing those our model service was not working which we realised was because we didn't release and updated image to reflect the changes. So in this PR, I bumped up the model service version to v0.0.9 and pushed with the appropriate tag.
 - Ignas: https://github.com/doda25-team16/operation/pull/103 https://github.com/doda25-team16/operation/pull/106 This week was mostly spent on testing our whole application, making some final fixes, and making sure documentation is correct
 - Job: https://github.com/doda25-team16/operation/pull/105 This week, I researched more into the extension and updated the extension.md to have more information, also updated the file structure for the docs.
 - Yuting: https://github.com/doda25-team16/operation/pull/107 This week I updated the app frontend active_requests decrement logic, and fixed the bugs where Grafana Dashboard could not monitor the difference between versions in continuous experimentation. I also updated the deployment.md to include Grafana monitoring.
+
+### Week Q2.10 (Jan 26+)
+- Ignas: https://github.com/doda25-team16/model-service/pull/26 https://github.com/doda25-team16/operation/pull/109 Split main and canary deployments for app and model. Moved alerting to Helm. Let serve_model set the model directory for preprocessing, and adjustments to docs.
+
+- Job: https://github.com/doda25-team16/operation/pull/112 and https://github.com/doda25-team16/operation/pull/113, Created continuous experimentation.md and updated deployment.md

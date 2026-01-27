@@ -92,6 +92,8 @@ Monitoring begins at the frontend, where a variety of metrics are gathered and a
 
 ## Traffic Management & Experimentation
 
+![Istio Traffic Management](images/Istio%20Diagram.png)
+
 ### A/B Testing Configuration
 The traffic split is configured in `k8s/istio.yml`. The `VirtualService` defines weighted routing rules that distribute incoming requests between the two deployment subsets.
 
