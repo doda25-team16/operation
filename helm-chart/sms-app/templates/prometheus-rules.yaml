@@ -1,0 +1,60 @@
+{{- if .Values.monitoring.prometheusRules.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: sms-app-alerts
+  namespace: {{ .Values.monitoring.namespace }}
+  labels:
+    app: sms-app
+    release: prometheus
+spec:
+  groups:
+    - name: sms-app-alerts
+      interval: {{ .Values.monitoring.prometheusRules.interval }}
+      rules:
+        {{- if .Values.monitoring.prometheusRules.highResponseTime.enabled }}
+        - alert: HighResponseTime
+          expr: histogram_quantile(0.95, rate(http_server_requests_seconds_bucket{app="sms-app"}[5m])) > {{ .Values.monitoring.prometheusRules.highResponseTime.threshold }}
+          for: {{ .Values.monitoring.prometheusRules.highResponseTime.for }}
+          labels:
+            severity: {{ .Values.monitoring.prometheusRules.highResponseTime.severity }}
+          annotations:
+            summary: "High response time on SMS app"
+            description: "95th percentile response time is {{`{{ $value }}`}}s (threshold: {{ .Values.monitoring.prometheusRules.highResponseTime.threshold }}s)"
+        {{- end }}
+        
+        {{- if .Values.monitoring.prometheusRules.highErrorRate.enabled }}
+        - alert: HighErrorRate
+          expr: rate(http_server_requests_seconds_count{app="sms-app",status=~"5.."}[5m]) > {{ .Values.monitoring.prometheusRules.highErrorRate.threshold }}
+          for: {{ .Values.monitoring.prometheusRules.highErrorRate.for }}
+          labels:
+            severity: {{ .Values.monitoring.prometheusRules.highErrorRate.severity }}
+          annotations:
+            summary: "High error rate on SMS app"
+            description: "Error rate is {{`{{ $value }}`}} errors/sec (threshold: {{ .Values.monitoring.prometheusRules.highErrorRate.threshold }})"
+        {{- end }}
+
+        {{- if .Values.monitoring.prometheusRules.podDown.enabled }}
+        - alert: PodDown
+          expr: up{job="sms-app"} == 0
+          for: {{ .Values.monitoring.prometheusRules.podDown.for }}
+          labels:
+            severity: {{ .Values.monitoring.prometheusRules.podDown.severity }}
+          annotations:
+            summary: "SMS App pod is down"
+            description: "Pod {{`{{ $labels.pod }}`}} is down"
+        {{- end }}
+
+        {{- if .Values.monitoring.prometheusRules.highMemoryUsage.enabled }}
+        - alert: HighMemoryUsage
+          expr: |
+            (container_memory_working_set_bytes{pod=~"sms-app.*",container="sms-app"} 
+            / container_spec_memory_limit_bytes{pod=~"sms-app.*",container="sms-app"}) > {{ .Values.monitoring.prometheusRules.highMemoryUsage.threshold }}
+          for: {{ .Values.monitoring.prometheusRules.highMemoryUsage.for }}
+          labels:
+            severity: {{ .Values.monitoring.prometheusRules.highMemoryUsage.severity }}
+          annotations:
+            summary: "High memory usage on SMS app"
+            description: "Memory usage is {{`{{ $value | humanizePercentage }}`}} (threshold: {{ .Values.monitoring.prometheusRules.highMemoryUsage.threshold | mul 100 }}%)"
+        {{- end }}
+{{- end }}
