@@ -49,8 +49,8 @@ spec:
             stat_prefix: http_local_rate_limiter
             # each minute user gets 10 requests, reset every minute
             token_bucket:
-              max_tokens: {{ .Values.trafficManagement.rateLimit.requestsPerMinute }}
-              tokens_per_fill: {{ .Values.trafficManagement.rateLimit.requestsPerMinute }}
+              max_tokens: {{ .Values.trafficManagement.ratelimit.requestsPerMinute }}
+              tokens_per_fill: {{ .Values.trafficManagement.ratelimit.requestsPerMinute }}
               fill_interval: 60s
             # rate limit 100% of the requests for now
             filter_enabled:
