@@ -7,20 +7,20 @@ metadata:
     app: {{ .Values.model.name }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
-    version: {{ .Values.model.canaryVersion }}
+    version: {{ .Values.model.canaryVersion | default "canary" }}
 spec:
   replicas: {{ .Values.model.replicaCount }}
   selector:
     matchLabels:
       app: {{ .Values.model.name }}
       release: {{ .Release.Name }}
-      version: {{ .Values.model.canaryVersion }}
+      version: {{ .Values.model.canaryVersion | default "canary" }}
   template:
     metadata:
       labels:
         app: {{ .Values.model.name }}
         release: {{ .Release.Name }}
-        version: {{ .Values.model.canaryVersion }}
+        version: {{ .Values.model.canaryVersion | default "canary" }}
     spec:
       containers:
       - name: {{ .Values.model.name }}
