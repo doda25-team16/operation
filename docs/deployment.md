@@ -31,7 +31,7 @@ The SMS Spam Detection Application is deployed on a Kubernetes cluster with Isti
 
 ## Architecture Diagram
 
-![Architecture Diagram](images/Istio%20Diagram.png)
+![Architecture Diagram](Architecture.png)
 
 The diagram above illustrates the two distinct traffic paths into the cluster:
 
@@ -99,6 +99,8 @@ Monitoring begins at the frontend, where a variety of metrics are gathered and a
 - **Backend**: Proxies to `kubernetes-dashboard-kong-proxy` on port 443.
 
 ## Traffic Management & Experimentation
+
+![Istio Traffic Management](images/Istio%20Diagram.png)
 
 ### A/B Testing Configuration
 The traffic split is configured in `k8s/istio.yml`. The `VirtualService` defines weighted routing rules that distribute incoming requests between the two deployment subsets.
