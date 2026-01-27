@@ -6,20 +6,20 @@ metadata:
   labels:
     app: {{ .Values.model.name }}
     release: {{ .Release.Name }}
-    version: {{ .Values.app.version }}
+    version: {{ .Values.model.version }}
 spec:
   replicas: {{ .Values.model.replicaCount }}
   selector:
     matchLabels:
       app: {{ .Values.model.name }}
       release: {{ .Release.Name }}
-      version: {{ .Values.app.version }}
+      version: {{ .Values.model.version }}
   template:
     metadata:
       labels:
         app: {{ .Values.model.name }}
         release: {{ .Release.Name }}
-        version: {{ .Values.app.version }}
+        version: {{ .Values.model.version }}
     spec:
       containers:
       - name: {{ .Values.model.name }}
