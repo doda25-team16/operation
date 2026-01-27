@@ -39,9 +39,6 @@ spec:
 
           - name: MODEL_SERVICE_URL
             value: "http://{{ .Values.model.name }}-canary:{{ .Values.model.service.port }}"
-
-          # - name: MODEL_HOST
-          #   value: "http://{{ .Values.model.name }}-canary:{{ .Values.model.service.port }}"
             
           - name: SECRET
             valueFrom:
